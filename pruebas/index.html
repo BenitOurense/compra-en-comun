@@ -23,7 +23,7 @@ const firebaseConfig={apiKey:"AIzaSyDuS20gr2p8ha5WI4qzLR34ZSJswTnDKpM",authDomai
 let authApi=null,user=null,guest=false;
 let dbApi=null,unsubscribeLists=null,unsubscribeShared=null,sharedLists=[],privateLists=[],pendingInvite=new URLSearchParams(location.search).get('invite'),shareUrl=null;
 function combineLists(){lists=[...privateLists,...sharedLists];renderLists();if(active)renderItems();}
-function stopCloud(){if(unsubscribeLists){unsubscribeLists();unsubscribeLists=null;}if(unsubscribeShared){unsubscribeShared();unsubscribeShared=null;}dbApi=null;lists=[];privateLists=[];sharedLists=[];active=null;}
+function stopCloud(){if(unsubscribeLists){unsubscribeLists();unsubscribeLists=null;}if(unsubscribeShared){unsubscribeShared();unsubscribeShared=null;}lists=[];privateLists=[];sharedLists=[];active=null;}
 function startCloud(){if(!user||!dbApi)return;const uid=user.uid;unsubscribeLists=dbApi.subscribe(uid,rows=>{privateLists=rows;combineLists();},()=>alert('No se pueden cargar tus listas. Comprueba las reglas de Firestore.'));unsubscribeShared=dbApi.subscribeShared(uid,rows=>{sharedLists=rows;combineLists();});if(pendingInvite)showInvite();}
 function syncGuest(){try{const saved=JSON.parse(localStorage.getItem(KEY)||'[]');lists=Array.isArray(saved)?saved.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string'&&Array.isArray(x.items)):[];}catch{lists=[];}}
 let verificationTimer=null;
