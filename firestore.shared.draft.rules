@@ -27,9 +27,9 @@ service cloud.firestore {
      && request.resource.data.items.size()<=500 && request.resource.data.updatedAt is timestamp;
    allow delete: if isOwner(id);
    match /members/{uid} {
-    allow read: if verified() && (request.auth.uid == uid || isOwner(id));
+    allow read: if isMember(id);
     allow create: if verified() && (
-      (request.auth.uid == uid && request.resource.data.keys().hasOnly(['joinedAt','inviteId'])
+      (request.auth.uid == uid && request.resource.data.keys().hasOnly(['joinedAt','inviteId','alias']) && request.resource.data.alias is string && request.resource.data.alias.size()>0 && request.resource.data.alias.size()<=40
        && request.resource.data.joinedAt is timestamp
        && request.resource.data.inviteId is string
        && exists(/databases/$(database)/documents/invitations/$(request.resource.data.inviteId))
@@ -39,7 +39,10 @@ service cloud.firestore {
        && request.resource.data.joinedAt is timestamp && request.resource.data.inviteId == 'owner')
     );
     allow delete: if isOwner(id) || (verified() && request.auth.uid == uid);
-    allow update: if false;
+    allow update: if verified() && request.auth.uid == uid && isMember(id)
+      && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['alias'])
+      && request.resource.data.alias is string && request.resource.data.alias.size()>0
+      && request.resource.data.alias.size()<=40;
    }
   }
   match /invitations/{token} {
