@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function verified() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+    function member(listId) {
+      return verified() && exists(/databases/$(database)/documents/sharedLists/$(listId)/members/$(request.auth.uid));
+    }
+    function owner(listId) {
+      return verified() && get(/databases/$(database)/documents/sharedLists/$(listId)).data.ownerUid == request.auth.uid;
+    }
+    match /users/{uid}/lists/{listId} {
+      allow read, delete: if verified() && request.auth.uid == uid;
+      allow create, update: if verified() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['name','items','updatedAt'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 70
+        && request.resource.data.items is list
+        && request.resource.data.items.size() <= 500
+        && request.resource.data.updatedAt is timestamp;
+    }
+    match /sharedLists/{listId} {
+      allow read: if member(listId);
+      allow create: if verified()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.name is string
+        && request.resource.data.items is list;
+      allow update: if member(listId)
+        && request.resource.data.ownerUid == resource.data.ownerUid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','items','updatedAt'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 70
+        && request.resource.data.items is list
+        && request.resource.data.items.size() <= 500;
+      allow delete: if owner(listId);
+      match /members/{uid} {
+        allow read: if member(listId);
+        allow create, update, delete: if owner(listId);
+      }
+    }
+  }
+}
