@@ -23,7 +23,7 @@ const firebaseConfig={apiKey:"AIzaSyDuS20gr2p8ha5WI4qzLR34ZSJswTnDKpM",authDomai
 let authApi=null,user=null,guest=false;
 let verificationTimer=null;
 function stopVerification(){if(verificationTimer){clearInterval(verificationTimer);verificationTimer=null;}}
-function startVerification(){stopVerification();verificationTimer=setInterval(async()=>{if(!user||!authApi||document.hidden)return;try{await authApi.reload(user);if(user.emailVerified){stopVerification();enter('¡Hola, '+(user.displayName||user.email?.split('@')[0]||'bienvenido').trim().split(/\\s+/)[0]+'! Aquí tienes tus listas');}}catch(e){/* Reintentar mientras la página esté abierta */}},3000);}
+function startVerification(){stopVerification();verificationTimer=setInterval(async()=>{if(!user||!authApi||document.hidden)return;try{await authApi.reload(user);if(user.emailVerified){stopVerification();enter('¡Hola, '+(user.displayName||user.email?.split('@')[0]||'bienvenido').trim().split(/\s+/)[0]+'! Aquí tienes tus listas');}}catch(e){/* Reintentar mientras la página esté abierta */}},3000);}
 function enter(label){stopVerification();$('registration-panel').hidden=true;$('verify-panel').hidden=true;$('auth-error').textContent='';$('welcome').hidden=true;$('workspace').hidden=false;$('session-bar').hidden=false;$('session-label').textContent=label;renderLists();}
 function leave(){$('welcome').hidden=false;$('workspace').hidden=true;$('session-bar').hidden=true;active=null;}
 function requireVerification(){leave();startVerification();$('registration-panel').hidden=true;$('email-login').hidden=false;$('google-login').hidden=false;$('register').hidden=false;$('verify-panel').hidden=false;$('auth-error').textContent='Confirma tu correo electrónico antes de entrar con esta cuenta.';}
