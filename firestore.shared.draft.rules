@@ -1,44 +1,68 @@
 rules_version = '2';
 service cloud.firestore {
-  match /databases/{database}/documents {
-    function verified() {
-      return request.auth != null && request.auth.token.email_verified == true;
-    }
-    function member(listId) {
-      return verified() && exists(/databases/$(database)/documents/sharedLists/$(listId)/members/$(request.auth.uid));
-    }
-    function owner(listId) {
-      return verified() && get(/databases/$(database)/documents/sharedLists/$(listId)).data.ownerUid == request.auth.uid;
-    }
-    match /users/{uid}/lists/{listId} {
-      allow read, delete: if verified() && request.auth.uid == uid;
-      allow create, update: if verified() && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['name','items','updatedAt'])
-        && request.resource.data.name is string
-        && request.resource.data.name.size() > 0
-        && request.resource.data.name.size() <= 70
-        && request.resource.data.items is list
-        && request.resource.data.items.size() <= 500
-        && request.resource.data.updatedAt is timestamp;
-    }
-    match /sharedLists/{listId} {
-      allow read: if member(listId);
-      allow create: if verified()
-        && request.resource.data.ownerUid == request.auth.uid
-        && request.resource.data.name is string
-        && request.resource.data.items is list;
-      allow update: if member(listId)
-        && request.resource.data.ownerUid == resource.data.ownerUid
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','items','updatedAt'])
-        && request.resource.data.name is string
-        && request.resource.data.name.size() <= 70
-        && request.resource.data.items is list
-        && request.resource.data.items.size() <= 500;
-      allow delete: if owner(listId);
-      match /members/{uid} {
-        allow read: if member(listId);
-        allow create, update, delete: if owner(listId);
-      }
-    }
+ match /databases/{database}/documents {
+  function verified(){return request.auth != null && request.auth.token.email_verified == true;}
+  function isOwner(id){return verified() && get(/databases/$(database)/documents/sharedLists/$(id)).data.ownerUid == request.auth.uid;}
+  function isMember(id){return verified() && exists(/databases/$(database)/documents/sharedLists/$(id)/members/$(request.auth.uid));}
+  match /users/{uid}/lists/{id} {
+   allow read, delete: if verified() && request.auth.uid == uid;
+   allow create, update: if verified() && request.auth.uid == uid
+    && request.resource.data.keys().hasOnly(['name','items','updatedAt'])
+    && request.resource.data.name is string && request.resource.data.name.size()>0
+    && request.resource.data.name.size()<=70 && request.resource.data.items is list
+    && request.resource.data.items.size()<=500 && request.resource.data.updatedAt is timestamp;
   }
+  match /sharedLists/{id} {
+   allow read: if isMember(id);
+   allow create: if verified() && request.resource.data.ownerUid == request.auth.uid
+     && request.resource.data.keys().hasOnly(['ownerUid','name','items','updatedAt'])
+     && request.resource.data.name is string && request.resource.data.name.size()>0
+     && request.resource.data.name.size()<=70 && request.resource.data.items is list
+     && request.resource.data.items.size()<=500 && request.resource.data.updatedAt is timestamp;
+   allow update: if isMember(id)
+     && request.resource.data.ownerUid == resource.data.ownerUid
+     && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','items','updatedAt'])
+     && request.resource.data.name is string && request.resource.data.name.size()>0
+     && request.resource.data.name.size()<=70 && request.resource.data.items is list
+     && request.resource.data.items.size()<=500 && request.resource.data.updatedAt is timestamp;
+   allow delete: if isOwner(id);
+   match /members/{uid} {
+    allow read: if verified() && (request.auth.uid == uid || isOwner(id));
+    allow create: if verified() && (
+      (request.auth.uid == uid && request.resource.data.keys().hasOnly(['joinedAt','inviteId'])
+       && request.resource.data.joinedAt is timestamp
+       && request.resource.data.inviteId is string
+       && exists(/databases/$(database)/documents/invitations/$(request.resource.data.inviteId))
+       && get(/databases/$(database)/documents/invitations/$(request.resource.data.inviteId)).data.listId == id
+       && get(/databases/$(database)/documents/invitations/$(request.resource.data.inviteId)).data.expiresAt > request.time)
+      || (isOwner(id) && request.resource.data.keys().hasOnly(['joinedAt','inviteId'])
+       && request.resource.data.joinedAt is timestamp && request.resource.data.inviteId == 'owner')
+    );
+    allow delete: if isOwner(id) || (verified() && request.auth.uid == uid);
+    allow update: if false;
+   }
+  }
+  match /invitations/{token} {
+   allow get: if verified();
+   allow list: if false;
+   allow create: if verified() && request.resource.data.keys().hasOnly(['listId','ownerUid','expiresAt'])
+     && request.resource.data.ownerUid == request.auth.uid
+     && request.resource.data.listId is string
+     && exists(/databases/$(database)/documents/sharedLists/$(request.resource.data.listId))
+     && isOwner(request.resource.data.listId)
+     && request.resource.data.expiresAt is timestamp
+     && request.resource.data.expiresAt > request.time
+     && request.resource.data.expiresAt < request.time + duration.value(8,'d');
+   allow delete: if verified() && resource.data.ownerUid == request.auth.uid;
+   allow update: if false;
+  }
+  match /userShares/{uid}/lists/{id} {
+   allow read: if verified() && request.auth.uid == uid;
+   allow create: if verified() && request.auth.uid == uid && isMember(id)
+     && request.resource.data.keys().hasOnly(['joinedAt'])
+     && request.resource.data.joinedAt is timestamp;
+   allow delete: if verified() && request.auth.uid == uid;
+   allow update: if false;
+  }
+ }
 }
