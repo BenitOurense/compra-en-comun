@@ -2,7 +2,7 @@
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Compra en común</title><style>
 :root{font-family:system-ui,-apple-system,sans-serif;color:#17342a;background:#f5f8f5}*{box-sizing:border-box}body{margin:0}header{background:#146c4b;color:white;padding:24px 18px}header div,main{max-width:760px;margin:auto}h1{margin:0;font-size:1.8rem}header p{margin:8px 0 0;color:#d5f3e3}main{padding:24px 16px}.panel{background:white;border-radius:16px;padding:20px;box-shadow:0 4px 20px #153c2712;margin-bottom:20px}h2{margin:0 0 16px;font-size:1.2rem}form{display:flex;gap:8px;flex-wrap:wrap}input{flex:1;min-width:180px;padding:12px;border:1px solid #afc4b8;border-radius:9px;font:inherit}button{font:inherit;border:0;border-radius:9px;padding:11px 15px;cursor:pointer;background:#146c4b;color:white}button:focus-visible,input:focus-visible{outline:3px solid #ffa947;outline-offset:2px}.secondary{background:#e8f2ec;color:#145c40}.danger{background:#fff0ee;color:#a72b20}.list{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 0;border-bottom:1px solid #e6eee8}.list:last-child{border-bottom:0}.list strong{display:block;overflow-wrap:anywhere}.list small{color:#65776d}.actions{display:flex;gap:7px;flex-wrap:wrap}.empty{color:#66786e;padding:18px 0}ul{padding:0;list-style:none}li.item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #e6eee8}li.item span{flex:1;overflow-wrap:anywhere}.done{text-decoration:line-through;color:#89968e}.back{margin-bottom:16px}footer{font-size:.85rem;color:#65776d;text-align:center;padding:12px 16px 30px}@media(max-width:480px){.list{align-items:flex-start;flex-direction:column}.actions{width:100%}.actions button{flex:1}}
-.auth{max-width:460px;margin:20px auto}.auth form{display:grid;gap:10px}.auth input,.auth button{width:100%;min-width:0}.auth p{color:#65776d}.error{color:#a72b20!important}.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px}.muted{font-size:.85rem}</style></head><body><header><div><h1>🛒 Compra en común</h1><p>Tus listas de la compra, sin complicaciones</p></div></header><main>
+.auth{max-width:460px;margin:20px auto}.auth form{display:grid;gap:10px}.auth input,.auth button{width:100%;min-width:0}.auth p{color:#65776d}.error{color:#a72b20!important}.topbar:not([hidden]){display:flex;justify-content:space-between;align-items:center;gap:10px}.muted{font-size:.85rem}</style></head><body><header><div><h1>🛒 Compra en común</h1><p>Tus listas de la compra, sin complicaciones</p></div></header><main>
 <section id="welcome" class="auth"><div class="panel"><h2>Bienvenido a Compra en común</h2><p>Organiza tus compras de forma sencilla.</p>
 <button id="google-login" type="button">Continuar con Google</button><p>O utiliza tu correo electrónico:</p>
 <form id="email-login"><input id="email" type="email" autocomplete="email" placeholder="Correo electrónico" required><input id="password" type="password" minlength="6" autocomplete="current-password" placeholder="Contraseña (mínimo 6 caracteres)" required><button>Iniciar sesión</button><button id="register" class="secondary" type="button">Crear cuenta</button></form>
@@ -14,6 +14,10 @@
 <script>
 'use strict';
 const KEY='compra-en-comun-v1';
+let lists=[];
+try{const saved=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(saved))lists=saved.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string'&&Array.isArray(x.items));}catch{}
+let active=null;
+const $=id=>document.getElementById(id);
 const SESSION_KEY='compra-en-comun-session-v1';
 const firebaseConfig={apiKey:"AIzaSyDuS20gr2p8ha5WI4qzLR34ZSJswTnDKpM",authDomain:"compra-en-comun.firebaseapp.com",projectId:"compra-en-comun",appId:"1:368062141359:web:0e8cdc0943478baca0155a"};
 let authApi=null,user=null,guest=false;
@@ -31,10 +35,7 @@ authApi={signIn:(e,p)=>au.signInWithEmailAndPassword(auth,e,p),register:(e,p)=>a
 au.onAuthStateChanged(auth,u=>{user=u;if(u){guest=false;localStorage.removeItem(SESSION_KEY);enter(u.displayName||u.email||'Mi cuenta');}else if(!guest)leave();});
 }catch(e){$('auth-error').textContent='No se pudo cargar Firebase. Puedes continuar como invitado.';}})();
 
-let lists=[];
-try{const saved=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(saved))lists=saved.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string'&&Array.isArray(x.items));}catch{}
-let active=null;
-const $=id=>document.getElementById(id);
+
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(lists));}catch{alert('No se pudieron guardar los cambios en este navegador.');}};
 const makeButton=(label,cls,fn)=>{const b=document.createElement('button');b.textContent=label;b.className=cls;b.type='button';b.addEventListener('click',fn);return b;};
 function renderLists(){const root=$('lists');root.replaceChildren();if(!lists.length){const p=document.createElement('p');p.className='empty';p.textContent='Todavía no tienes listas. ¡Crea la primera!';root.append(p);return;}
