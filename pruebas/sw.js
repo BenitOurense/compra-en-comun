@@ -1,6 +1,6 @@
 /* Only public app files are cached. Firebase and product API requests are never intercepted. */
 'use strict';
-const CACHE='compra-pruebas-shell-v033';
+const CACHE='compra-pruebas-shell-v033b';
 const FILES=['./','./index.html','./catalog.js','./mobile.js','./app-ui.js','./app.css','./mutations.js','./catalogo-inicial.json','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES))));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('compra-pruebas-shell-')&&k!==CACHE).map(k=>caches.delete(k))))));

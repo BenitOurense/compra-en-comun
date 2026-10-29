@@ -11,7 +11,7 @@ Diseño móvil aprobado a partir de la referencia de cuatro pantallas. Todo el c
 - Búsqueda local con incorporación en un toque desde las sugerencias. Las fichas de productos exactos tienen un acceso independiente para inspeccionar alérgenos antes de añadirlos. La entrada por teclado permite escribir y pulsar Enter, limpia el campo y conserva el foco. La pantalla de altas permanece abierta para añadir varios seguidos.
 - Recientes y habituales con miniaturas e incorporación directa. Búsqueda externa explícita, caché y datos de Open Food Facts conservados.
 - Ajustes y atribución del catálogo trasladados a su propia pantalla. Sigue existiendo el máximo de dos supermercados por usuario y dispositivo.
-- Historial de navegación de las vistas para volver con Atrás. El escáner y los participantes usan diálogos accesibles que se presentan visualmente a pantalla completa; el lector y su detención siguen en `mobile.js`.
+- Historial de navegación de las vistas para volver con Atrás, vinculado a la cuenta para no restaurar pantallas de otra sesión. El escáner y los participantes usan diálogos accesibles que se presentan visualmente a pantalla completa; el lector y su detención siguen en `mobile.js`.
 - Se mantiene la PWA de GitHub Pages; no es un APK nativo. Manifest y caché de archivos públicos actualizados a v0.33. La instalación y el teclado físico del móvil requieren prueba en Android.
 
 ## Compatibilidad y verificaciones
