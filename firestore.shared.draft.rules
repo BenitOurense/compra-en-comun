@@ -69,7 +69,7 @@ service cloud.firestore {
    allow create: if verified() && request.auth.uid == uid && isMember(id)
      && request.resource.data.keys().hasOnly(['joinedAt'])
      && request.resource.data.joinedAt is timestamp;
-   allow delete: if verified() && request.auth.uid == uid;
+   allow delete: if verified() && (request.auth.uid == uid || isAdmin(id));
    allow update: if false;
   }
  }
