@@ -1,6 +1,6 @@
 {
   "sourceUrl": "https://static.openfoodfacts.org/data/en.openfoodfacts.org.products.csv.gz",
-  "capturedAt": "2026-10-29T17:00:47.574235+00:00",
+  "capturedAt": "2026-10-29T21:31:08.609579+00:00",
   "selection": "Productos comercializados en España; máximo por popularidad y fecha de actualización",
   "scanned": 4881991,
   "matchedSpain": 323567,
@@ -8,309 +8,309 @@
   "license": "ODbL",
   "imageLicense": "CC BY-SA",
   "schema": 1,
-  "version": "6a5e81be541920adff024492748c24d86b1c10014a00022a3400e6dae5b6790a",
+  "version": "ff8517695bbb18fd7b3fbdea550fd23ae0118019c5ec068edc3d32cfe7d88ce3",
   "count": 50000,
-  "bytes": 13047776,
+  "bytes": 14998556,
   "shards": [
     {
-      "path": "products-bb19c13d8ddd21dd.json",
+      "path": "products-ee6cef89ef0e4f31.json",
       "count": 1000,
-      "bytes": 258880,
-      "sha256": "bb19c13d8ddd21dd1680efccc7ed217edc0392c5f4ecd9e97194e0e1fc731ffc"
+      "bytes": 370641,
+      "sha256": "ee6cef89ef0e4f31af3dd4901e214ce89e01b32dec3458bb973b16357ebfb683"
     },
     {
-      "path": "products-0d73fa8f3d4e1479.json",
+      "path": "products-93a551685cdba155.json",
       "count": 1000,
-      "bytes": 252141,
-      "sha256": "0d73fa8f3d4e1479c891745622405c764efea015e0b0112c3011019e49fa9f5c"
+      "bytes": 330055,
+      "sha256": "93a551685cdba1555ca99112af2bbbba5f7d6c1bc7d2740274f4c3c4aaa91b2b"
     },
     {
-      "path": "products-1c8e96b68123e1cd.json",
+      "path": "products-1c30531b0ec0ae51.json",
       "count": 1000,
-      "bytes": 252997,
-      "sha256": "1c8e96b68123e1cddbbd4db1816db70f8b9610ed2cb064e02e41ee120bd4292b"
+      "bytes": 324406,
+      "sha256": "1c30531b0ec0ae5149a53a31c22d168114c381f39540c8b55451fe231abec921"
     },
     {
-      "path": "products-7e777b36e946fb25.json",
+      "path": "products-12a3b123b04d20d3.json",
       "count": 1000,
-      "bytes": 255334,
-      "sha256": "7e777b36e946fb252f031fb4363f1186adef203f04424214c4839b2f046c4b1f"
+      "bytes": 317459,
+      "sha256": "12a3b123b04d20d3f5b5ef4b8a5cb24d570a540ee5a08924991311069cc63494"
     },
     {
-      "path": "products-19846b6f8cf577e9.json",
+      "path": "products-f046c37f923e7c8c.json",
       "count": 1000,
-      "bytes": 255394,
-      "sha256": "19846b6f8cf577e9469effe0a94560a42f675cd41911a9b14ea08d0e35bdea1e"
+      "bytes": 311554,
+      "sha256": "f046c37f923e7c8c82978b108c3d0a0805a7b14f33ee5c28da37db8870fd873b"
     },
     {
-      "path": "products-0ef984888d2a3b8d.json",
+      "path": "products-6c13999085037e5a.json",
       "count": 1000,
-      "bytes": 253807,
-      "sha256": "0ef984888d2a3b8d1d0d74583582c0e560556a7a0b6846ff4d6e18d56c62eeb1"
+      "bytes": 309512,
+      "sha256": "6c13999085037e5a64fb032bf42e6a227d15a7236d66fca8ebaeb229ad219856"
     },
     {
-      "path": "products-a1f436ba9f4fb3bd.json",
+      "path": "products-6701937f020119f9.json",
       "count": 1000,
-      "bytes": 259647,
-      "sha256": "a1f436ba9f4fb3bde9d6cb6aed8f69482ae9ab7d65744b2ec3cb018983bf9352"
+      "bytes": 312252,
+      "sha256": "6701937f020119f9035442786cee9fe2218b5c3d3ffe37d292e59b80dda3d134"
     },
     {
-      "path": "products-e40b7324000c495c.json",
+      "path": "products-a7a9a41bad501d86.json",
       "count": 1000,
-      "bytes": 254777,
-      "sha256": "e40b7324000c495cd73a97dc41dbe7e3d7317a0533c94abc4ae9083a96b38c92"
+      "bytes": 305188,
+      "sha256": "a7a9a41bad501d86abfab1e8583c5fd3490958e9731dffa112f05005d2dee5f0"
     },
     {
-      "path": "products-84b2a29a1a9bb27c.json",
+      "path": "products-901336515fc4b83e.json",
       "count": 1000,
-      "bytes": 254851,
-      "sha256": "84b2a29a1a9bb27cc98e37f12b22f2910e56fad43378b39dc34815e58ef4288c"
+      "bytes": 302648,
+      "sha256": "901336515fc4b83ee421d9bfb13e7ba08b71596f87e12d8349d2a0856f2f9ff9"
     },
     {
-      "path": "products-0c94def808820d56.json",
+      "path": "products-3c31fa2c1607a5ad.json",
       "count": 1000,
-      "bytes": 259202,
-      "sha256": "0c94def808820d565299b3aedd917269e4e5f23337808b23e3f47346a8bbc280"
+      "bytes": 304137,
+      "sha256": "3c31fa2c1607a5ad35c9dc58f13f13cc29fad6be7d84749b7183056b500109d0"
     },
     {
-      "path": "products-e401be1751606514.json",
+      "path": "products-4c2fdb9fcba00945.json",
       "count": 1000,
-      "bytes": 245220,
-      "sha256": "e401be17516065143d971c031dbd3ced1039f11719b86c8e815b3ee84f5a6471"
+      "bytes": 288668,
+      "sha256": "4c2fdb9fcba009453ee32a85b3be6734a112989a185fb250fb48a908b4b227ff"
     },
     {
-      "path": "products-7826c7dfba31f249.json",
+      "path": "products-57aa4cb4ddcf851e.json",
       "count": 1000,
-      "bytes": 264083,
-      "sha256": "7826c7dfba31f249659928960acfb0d06dc0a657d9c74c06df548dc01c9b6c87"
+      "bytes": 307606,
+      "sha256": "57aa4cb4ddcf851ea719ea9b28743ef34d3e5655acb8191c89bcf70974a7f0c9"
     },
     {
-      "path": "products-549b32af71e4391f.json",
+      "path": "products-c0ac8cccc1044ca2.json",
       "count": 1000,
-      "bytes": 233072,
-      "sha256": "549b32af71e4391f36738016985a14cc4666ac1d6af6a2abd71a66a0fd78b6d2"
+      "bytes": 268959,
+      "sha256": "c0ac8cccc1044ca2b820bff7d5f6763e45225821b497ff2b5f9bf59b45d595ab"
     },
     {
-      "path": "products-5774dc2002e29a67.json",
+      "path": "products-c90898b0d1745160.json",
       "count": 1000,
-      "bytes": 288525,
-      "sha256": "5774dc2002e29a67fb5242b28fd9b1ef959924eff80f12453acce61e1298b8f6"
+      "bytes": 330349,
+      "sha256": "c90898b0d1745160afd046c9481ab31e67eaf338effd7bd94573022d9b6b2c8c"
     },
     {
-      "path": "products-6c5b9433d7939a80.json",
+      "path": "products-8f00e59447131d70.json",
       "count": 1000,
-      "bytes": 246284,
-      "sha256": "6c5b9433d7939a80dff596675066f0689413162d8a49a724aecbd847b0b0c946"
+      "bytes": 284989,
+      "sha256": "8f00e59447131d701aacf22f07e3f1edcba53e80da9c87ebda3a09b2810570ef"
     },
     {
-      "path": "products-3076804ef3288f16.json",
+      "path": "products-3ef6ae1452a08883.json",
       "count": 1000,
-      "bytes": 230991,
-      "sha256": "3076804ef3288f16aa2f3796ce0d4a2571eedf39684d6d03d930797f1d8753db"
+      "bytes": 266879,
+      "sha256": "3ef6ae1452a08883c11d7a9dd616b90b60a35cb9cfba2bfa15705c27f35c412d"
     },
     {
-      "path": "products-ac5fed0a2593b1e4.json",
+      "path": "products-405a8b61f410cf70.json",
       "count": 1000,
-      "bytes": 277343,
-      "sha256": "ac5fed0a2593b1e4b38635bfdaf3663041f6666e340e028cfa34e65326df4b15"
+      "bytes": 311102,
+      "sha256": "405a8b61f410cf704f67da849e329ed7cbdd60d46710889c7a7eb33726f5eeb6"
     },
     {
-      "path": "products-c5c13be04f5a6c7f.json",
+      "path": "products-088a9445c9b063d4.json",
       "count": 1000,
-      "bytes": 296644,
-      "sha256": "c5c13be04f5a6c7f56ad586c3a7adea707875978b48bdbd18fc4517300826fcf"
+      "bytes": 337514,
+      "sha256": "088a9445c9b063d4f51afa637ee03ed07cd0c886c5d79333c847b6c1c7bb53c2"
     },
     {
-      "path": "products-cd47d02d312d854f.json",
+      "path": "products-3458e1ed42034f23.json",
       "count": 1000,
-      "bytes": 253737,
-      "sha256": "cd47d02d312d854f6ffa07f288feeed2ca218c62fc94fd682849cb2095ebd3fd"
+      "bytes": 289819,
+      "sha256": "3458e1ed42034f23a549feb33a1df5e35a768d18f2a01318b5a0c0134526d10c"
     },
     {
-      "path": "products-814d1ce7166beb92.json",
+      "path": "products-a12c4248092add46.json",
       "count": 1000,
-      "bytes": 232236,
-      "sha256": "814d1ce7166beb92833d2f886910bc530f9f117f3663b7d83b09941bd980a5b7"
+      "bytes": 266880,
+      "sha256": "a12c4248092add464b8ce05907a24686b23437355846be06ec98627b4fdb0726"
     },
     {
-      "path": "products-14da7f44bf7953a4.json",
+      "path": "products-ae27f462c3a5c66e.json",
       "count": 1000,
-      "bytes": 230766,
-      "sha256": "14da7f44bf7953a46e81aa17c958650d81b3655a2f61468a6cb1041c87504f95"
+      "bytes": 264850,
+      "sha256": "ae27f462c3a5c66ef2e9fafb3b9471bc5b379969a0fe2d22bdeb72f8a611854a"
     },
     {
-      "path": "products-413e96e4a218fbaf.json",
+      "path": "products-521e0bad99d3b935.json",
       "count": 1000,
-      "bytes": 253216,
-      "sha256": "413e96e4a218fbaf5fe3b5fa8ea4493bc49adc09796ef1b74e59bd2fabd1f573"
+      "bytes": 283397,
+      "sha256": "521e0bad99d3b935b26a2e3ce26b7f43e6a6db7664edcdc9277d430ee6711c01"
     },
     {
-      "path": "products-0730a4f11a4ee16a.json",
+      "path": "products-98821e2cae0b54f5.json",
       "count": 1000,
-      "bytes": 285547,
-      "sha256": "0730a4f11a4ee16a83e0db436b9fa08941a3a57eedcb32a71509afe9e403984c"
+      "bytes": 316687,
+      "sha256": "98821e2cae0b54f5aff6038a3c2e7165b9da71777c7c6ae90dc007a3c84b5a0e"
     },
     {
-      "path": "products-770115ffe29ed0b9.json",
+      "path": "products-65ec226eec8f54f6.json",
       "count": 1000,
-      "bytes": 292817,
-      "sha256": "770115ffe29ed0b96081c659d1a5f2908fc18a17a2f70255e4ce3792fd2e6581"
+      "bytes": 326852,
+      "sha256": "65ec226eec8f54f6147aa41869d85d447181800544f408e309cbf0cd2a95c4d4"
     },
     {
-      "path": "products-a7fe9fae0dbac37b.json",
+      "path": "products-beb815429693282a.json",
       "count": 1000,
-      "bytes": 306329,
-      "sha256": "a7fe9fae0dbac37be5670be24cfbc532901dc0c15789bc965310caba8aac1998"
+      "bytes": 341288,
+      "sha256": "beb815429693282a284c8514586f84b09717ac8fbeb50285949f0ed7e7af3d1a"
     },
     {
-      "path": "products-e980955d807478a2.json",
+      "path": "products-bfd24b68619ba824.json",
       "count": 1000,
-      "bytes": 263464,
-      "sha256": "e980955d807478a28141923f74a8322ccf46faec9640818bffbc0ce021cf38fd"
+      "bytes": 307535,
+      "sha256": "bfd24b68619ba824797993f56991eb70be82020814549c6b77d1c880b4fcfc0e"
     },
     {
-      "path": "products-d581a048654e26f2.json",
+      "path": "products-c711cb7b844ff711.json",
       "count": 1000,
-      "bytes": 252312,
-      "sha256": "d581a048654e26f24d3455e19033d12f0570f8f09acc977ab814f77ccfb1aac0"
+      "bytes": 279552,
+      "sha256": "c711cb7b844ff71167723ae09e297b086e9c63bab43c4caf57e2b0258fb9d5d7"
     },
     {
-      "path": "products-d2590eca149424c5.json",
+      "path": "products-a197871ed55a4f93.json",
       "count": 1000,
-      "bytes": 232871,
-      "sha256": "d2590eca149424c5b78248836b993f20d3f8e4085b5a34c76ab2ae5b6d620c8a"
+      "bytes": 265795,
+      "sha256": "a197871ed55a4f93d5267f2d94dcfaaafbe9706329e5241aaa9c92461ca0bc27"
     },
     {
-      "path": "products-e71b8deea2cc22ec.json",
+      "path": "products-dc555817e5418113.json",
       "count": 1000,
-      "bytes": 229286,
-      "sha256": "e71b8deea2cc22ecfb562dd198ef78bcd467747a500f5695eb78b438631b46b4"
+      "bytes": 260559,
+      "sha256": "dc555817e54181131be516c7cb8fd27042cff4dfb3b8558523c9f301c40e0702"
     },
     {
-      "path": "products-d1ef02251462c362.json",
+      "path": "products-62f11323a1c94722.json",
       "count": 1000,
-      "bytes": 226925,
-      "sha256": "d1ef02251462c3623887dd32db8f873601fcc0726532642f99a93c99886d3dfe"
+      "bytes": 258397,
+      "sha256": "62f11323a1c9472230d4b7f685edfbd0e8b295f6d91275a277abc9bb37ab10d2"
     },
     {
-      "path": "products-3e1d7f99a2f9bb94.json",
+      "path": "products-12489e7ae9022783.json",
       "count": 1000,
-      "bytes": 228484,
-      "sha256": "3e1d7f99a2f9bb94d0680fb5d5aa9fca2970c385950a05cf04c809c67f47716b"
+      "bytes": 257336,
+      "sha256": "12489e7ae9022783bd4988bbdb577e3434070ef1644e50cc36a66d128ad5d36c"
     },
     {
-      "path": "products-dbf5b15d178838d7.json",
+      "path": "products-4228a14f5876c4f6.json",
       "count": 1000,
-      "bytes": 244273,
-      "sha256": "dbf5b15d178838d7763e64dc44ba74041263e87be1d1b8c0cb8a8162c29984d6"
+      "bytes": 274898,
+      "sha256": "4228a14f5876c4f68017618baa750e6130393d3b7cfe300ce4ff1458e87bbd34"
     },
     {
-      "path": "products-e0b14aef9d18687d.json",
+      "path": "products-cc01a94959afbf8d.json",
       "count": 1000,
-      "bytes": 253631,
-      "sha256": "e0b14aef9d18687d1581e9e6ff59e531af7591cecec040b87d1754ab03cb6067"
+      "bytes": 280655,
+      "sha256": "cc01a94959afbf8db0fead7181297b5a54961a184af2bd8f8105818fc11088a2"
     },
     {
-      "path": "products-d621cd061cb9fc9d.json",
+      "path": "products-3543d07764c485dd.json",
       "count": 1000,
-      "bytes": 257548,
-      "sha256": "d621cd061cb9fc9dc4ee01884d8076ee5916677423a314c4f9749480ff0aa666"
+      "bytes": 288770,
+      "sha256": "3543d07764c485dd48a5445ce0f5e07d9d1e83a6432051b91d6f3434a3ddaf8f"
     },
     {
-      "path": "products-c74a28e2700a1f65.json",
+      "path": "products-93040c16950d1905.json",
       "count": 1000,
-      "bytes": 274396,
-      "sha256": "c74a28e2700a1f652b35ca62bd41dd27b287d6b6d4675fc0fccfcad8219aed8d"
+      "bytes": 300937,
+      "sha256": "93040c16950d1905eee13e8c85e461aeb18999f563288c37f5b7353a4f397cbf"
     },
     {
-      "path": "products-f75b134691b3c3de.json",
+      "path": "products-422c877c81315941.json",
       "count": 1000,
-      "bytes": 276547,
-      "sha256": "f75b134691b3c3de391e76b7d5667b7bc6c3a90d1209c2a0cc6a404ba5360957"
+      "bytes": 302880,
+      "sha256": "422c877c81315941c114ed3e4042de88f39e0a4115418cfd319e9dc41d57c382"
     },
     {
-      "path": "products-9909941683180910.json",
+      "path": "products-d4a49c157e084dbf.json",
       "count": 1000,
-      "bytes": 293986,
-      "sha256": "99099416831809106aafd734c824f9844ef4c014cdf0b55dea512ab2248778f2"
+      "bytes": 327330,
+      "sha256": "d4a49c157e084dbf3aeed4185f294bad4843f68b92c1d6c9a78402c92c385165"
     },
     {
-      "path": "products-073ecf9b979d2215.json",
+      "path": "products-65cce25dccfc159d.json",
       "count": 1000,
-      "bytes": 296054,
-      "sha256": "073ecf9b979d221576c4a9e8b793c90395da37ad691e97007863988c4a0db798"
+      "bytes": 328796,
+      "sha256": "65cce25dccfc159de83b6360964e781583b87043f42f15b7c0115f277282c5f0"
     },
     {
-      "path": "products-af7a08c97e14e151.json",
+      "path": "products-bbd79a61ca1882f3.json",
       "count": 1000,
-      "bytes": 295274,
-      "sha256": "af7a08c97e14e1513ed8c341c87b4b1c0d1a6cba6757d16c524f98e0bb5fd2bd"
+      "bytes": 326551,
+      "sha256": "bbd79a61ca1882f3fa064069c69bc964a33125e915b4d4fb4a31e51e42abacc5"
     },
     {
-      "path": "products-f9948b90efdecbdd.json",
+      "path": "products-d8c8bfd900946c71.json",
       "count": 1000,
-      "bytes": 286201,
-      "sha256": "f9948b90efdecbdd34e3f9f6b4d0764a5bdea9abf9e508789090f792bf8e42a6"
+      "bytes": 314604,
+      "sha256": "d8c8bfd900946c71140f6d9a755a5afb97948f3ed51ae442e6d5fa00f89661da"
     },
     {
-      "path": "products-963ce30421bb1b0f.json",
+      "path": "products-f30e059e368956b9.json",
       "count": 1000,
-      "bytes": 300999,
-      "sha256": "963ce30421bb1b0f4393a9e7ed7672f3b8955897e40e6d77764aaef972ba39a0"
+      "bytes": 329481,
+      "sha256": "f30e059e368956b98679e1a4bcefa90e47bd28cd57e833a6c0190376f982bae4"
     },
     {
-      "path": "products-1f7b071fb2f30915.json",
+      "path": "products-5fe5f551618d1ddd.json",
       "count": 1000,
-      "bytes": 306330,
-      "sha256": "1f7b071fb2f309151b54dc5bb0188b11c779b7067e954a21d4a5900975eaf495"
+      "bytes": 340329,
+      "sha256": "5fe5f551618d1dddbaaa7ebb21c984ffcbb393cf16ee2bac6326cae15911bc05"
     },
     {
-      "path": "products-4fc1c12799b0f258.json",
+      "path": "products-a4ccaaff8a6b8fbf.json",
       "count": 1000,
-      "bytes": 286303,
-      "sha256": "4fc1c12799b0f258b46c25b53a09fcdc8bcee5c1fe95c7580bf10ee2541ef13b"
+      "bytes": 316732,
+      "sha256": "a4ccaaff8a6b8fbf50de95a144e619dd30a6cccbc69f0458042d0d3bf31fac09"
     },
     {
-      "path": "products-bf1cad2b81a732e8.json",
+      "path": "products-eb58b4c9495a8e12.json",
       "count": 1000,
-      "bytes": 265390,
-      "sha256": "bf1cad2b81a732e88a9c142599ffe8b48c63c747fc5dd50defdb2befddcfbb29"
+      "bytes": 307409,
+      "sha256": "eb58b4c9495a8e121be85374bff8531dcae8712fb5a56102a4e8e1eae1a52f72"
     },
     {
-      "path": "products-82fe8eebcc37a0b5.json",
+      "path": "products-abcb828d37a601c0.json",
       "count": 1000,
-      "bytes": 278789,
-      "sha256": "82fe8eebcc37a0b581a5f011e512e75aa37acd9a948b34196edddddb99ba4db4"
+      "bytes": 318001,
+      "sha256": "abcb828d37a601c00aa0a058284fdd60191aa28f086c0ce8cb90013303044d00"
     },
     {
-      "path": "products-599a69d751469588.json",
+      "path": "products-a9c7aff21093ebc4.json",
       "count": 1000,
-      "bytes": 257882,
-      "sha256": "599a69d751469588a360d1fcd523bbc38528c00eb3456f9c25e6166faf2120a9"
+      "bytes": 285908,
+      "sha256": "a9c7aff21093ebc49f0365e010cab98a0416eec613dfc6e2cb40742c4f87d397"
     },
     {
-      "path": "products-36f6b74027a97218.json",
+      "path": "products-5a01d76f9ae1cc55.json",
       "count": 1000,
-      "bytes": 236522,
-      "sha256": "36f6b74027a97218e6a6f4efd783fb9dcdf4939639a9acb2ca8cb30bc3c1eb4f"
+      "bytes": 257010,
+      "sha256": "5a01d76f9ae1cc558150759730aa2fc5ffd10b7750a2f81e2d01a2615b637d01"
     },
     {
-      "path": "products-5655c927c2df2fdf.json",
+      "path": "products-ab83c427d1ca58d8.json",
       "count": 1000,
-      "bytes": 245440,
-      "sha256": "5655c927c2df2fdf0d57f3fb8efdb3090c431bdf19234bee24db6ea4cf4a745c"
+      "bytes": 271539,
+      "sha256": "ab83c427d1ca58d824cf9e90533f22f05b9d291182e2797bab1fa8874c94463f"
     },
     {
-      "path": "products-bf3935700e897ac9.json",
+      "path": "products-27cfb6aaecc9aca5.json",
       "count": 1000,
-      "bytes": 233114,
-      "sha256": "bf3935700e897ac954ba35590a235a97126b86e5f080b6910fd4d2dfe3837e64"
+      "bytes": 262915,
+      "sha256": "27cfb6aaecc9aca5e999847d2cd5d9d8488ed7ed74d11b473cc338e13305cdf2"
     },
     {
-      "path": "products-bc2149fb7942e2d8.json",
+      "path": "products-a6bfc9b4fe544981.json",
       "count": 1000,
-      "bytes": 231915,
-      "sha256": "bc2149fb7942e2d8b1fbf7ee4e1bef653215de334ed97f3827fff124cae84fe5"
+      "bytes": 260946,
+      "sha256": "a6bfc9b4fe5449817755cc1df8dc006e4624fab01bb5b3c38728988e7a37874c"
     }
   ]
 }

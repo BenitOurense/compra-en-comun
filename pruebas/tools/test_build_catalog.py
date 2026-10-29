@@ -15,6 +15,9 @@ class CatalogTests(unittest.TestCase):
     def test_csv_export_field_names_for_images_and_allergens(self):
         url='https://images.openfoodfacts.org/images/products/762/221/020/4424/front_es.157.200.jpg'
         p=b.compact(self.row(allergens='',allergens_en='Milk',image_small_url=url));self.assertEqual(p['image'],url);self.assertEqual(p['allergens'],'Milk')
+    def test_absence_labels_preserved_without_inference(self):
+        self.assertEqual(b.compact(self.row(labels_tags='en:no-gluten,en:no-milk'))['labels'],'en:no-gluten,en:no-milk')
+        self.assertEqual(b.compact(self.row(product_name='Sin gluten'))['labels'],'')
     def test_generated_manifest_matches_shards(self):
         with tempfile.TemporaryDirectory() as t:
             p=b.compact(self.row());m=b.write_catalog([p],Path(t)/'catalogue',{'capturedAt':'2026-01-01T00:00:00Z'})

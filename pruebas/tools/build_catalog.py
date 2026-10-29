@@ -25,7 +25,7 @@ def compact(row):
     if parsed.scheme!='https' or not (parsed.hostname or '').endswith('.openfoodfacts.org'):image=''
     tags=[x.strip() for x in text(row.get('categories_tags'),3000).split(',')]
     terms=' '.join([text(row.get('categories'),700),*[ALIASES[t] for t in tags if t in ALIASES]])
-    return {'name':name,'brand':text(row.get('brands'),160),'code':code,'image':image,'allergens':text(row.get('allergens') or row.get('allergens_tags') or row.get('allergens_en')),'traces':text(row.get('traces') or row.get('traces_tags') or row.get('traces_en')),'stores':text(row.get('stores'),300),'terms':text(terms,800)}
+    return {'name':name,'brand':text(row.get('brands'),160),'code':code,'image':image,'allergens':text(row.get('allergens') or row.get('allergens_tags') or row.get('allergens_en')),'traces':text(row.get('traces') or row.get('traces_tags') or row.get('traces_en')),'labels':text(row.get('labels_tags') or row.get('labels_en') or row.get('labels'),1000),'stores':text(row.get('stores'),300),'terms':text(terms,800)}
 def collect(stream,maximum=50000):
     csv.field_size_limit(16*1024*1024);reader=csv.DictReader(stream,delimiter='\t')
     if not {'code','product_name','countries_tags'}.issubset(reader.fieldnames or []):raise ValueError('No es una exportación TSV de OFF con los campos requeridos')
