@@ -39,7 +39,7 @@ service cloud.firestore {
        && exists(/databases/$(database)/documents/invitations/$(request.resource.data.inviteId))
        && get(/databases/$(database)/documents/invitations/$(request.resource.data.inviteId)).data.listId == id
        && get(/databases/$(database)/documents/invitations/$(request.resource.data.inviteId)).data.expiresAt > request.time)
-      || (isOwner(id) && request.resource.data.keys().hasOnly(['joinedAt','inviteId','alias']) && request.resource.data.alias is string && request.resource.data.alias.size()>0 && request.resource.data.alias.size()<=40
+      || (isOwner(id) && uid == request.auth.uid && request.resource.data.keys().hasOnly(['joinedAt','inviteId','alias']) && request.resource.data.alias is string && request.resource.data.alias.size()>0 && request.resource.data.alias.size()<=40
        && request.resource.data.joinedAt is timestamp && request.resource.data.inviteId == 'owner')
     );
     allow delete: if (isAdmin(id) && uid != get(/databases/$(database)/documents/sharedLists/$(id)).data.ownerUid) || (verified() && request.auth.uid == uid && !isOwner(id));
@@ -54,7 +54,7 @@ service cloud.firestore {
    allow get: if verified();
    allow list: if false;
    allow create: if verified() && request.resource.data.keys().hasOnly(['listId','ownerUid','expiresAt'])
-     && request.resource.data.ownerUid == request.auth.uid
+     && request.resource.data.ownerUid == get(/databases/$(database)/documents/sharedLists/$(request.resource.data.listId)).data.ownerUid
      && request.resource.data.listId is string
      && exists(/databases/$(database)/documents/sharedLists/$(request.resource.data.listId))
      && canInvite(request.resource.data.listId)
