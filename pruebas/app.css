@@ -25,3 +25,6 @@ li.item label:focus-within{outline:none}li.item:has(input:focus-visible){outline
 
 /* Explicit product choices and camera/manual input transition. */
 .product-add-choices{clear:both;padding-top:18px}.product-add-choices h2{font-size:16px;margin:0 0 10px}.product-add-choices button{width:100%}.generic-product-form{display:grid;gap:8px;border-top:1px solid #ccddef;margin-top:14px;padding-top:14px}.generic-product-form label{font-size:13px;font-weight:600}.generic-product-form input{width:100%;min-width:0;background:#fff}.generic-product-form small{font-size:12px;color:var(--muted-ink);line-height:1.4}.product-add-generic{border:1px solid #83ade0!important;color:#145b9c!important;background:#fff!important}#scanner-resume{width:100%;margin:4px 0 16px}#scanner-dialog[data-mode=manual] #barcode-form{margin-top:12px}
+
+/* Keep the release readable alongside the app name, including small phones. */
+body>header h1{display:flex;align-items:baseline;gap:6px}.app-title-name{min-width:0;overflow:hidden;text-overflow:ellipsis}body>header .app-version{display:inline;flex:0 0 auto;font-size:11px;font-weight:500;color:var(--muted-ink);line-height:1}#app-back:disabled{display:none}
