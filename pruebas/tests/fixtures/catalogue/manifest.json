@@ -1,0 +1,19 @@
+{
+  "capturedAt": "2026-10-29T14:17:10.703Z",
+  "selection": "Fixture de seis fichas reales de OFF para validar el cargador",
+  "source": "Open Food Facts",
+  "license": "ODbL",
+  "imageLicense": "CC BY-SA",
+  "schema": 1,
+  "version": "72166fafa9c1a0c2a9ed4dd99a5096becbf0b093ae34ee0af4a1bd281f9e83e9",
+  "count": 6,
+  "bytes": 1877,
+  "shards": [
+    {
+      "path": "products-5c6f74d5591d0756.json",
+      "count": 6,
+      "bytes": 1877,
+      "sha256": "5c6f74d5591d07565c67f2b41ce3d3cf22257f89d418458a5328b29a5ff5d069"
+    }
+  ]
+}

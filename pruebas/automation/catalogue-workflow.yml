@@ -1,0 +1,40 @@
+# BORRADOR INACTIVO. Activar requiere autorización para copiar este archivo
+# a .github/workflows/catalogue.yml, fuera del alcance actual /pruebas/.
+name: Actualizar catálogo español
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 3 * * 0'
+permissions:
+  contents: write
+concurrency:
+  group: spanish-catalogue
+  cancel-in-progress: false
+jobs:
+  catalogue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Obtener código y credencial temporal de GitHub
+        run: |
+          gh repo clone "$GITHUB_REPOSITORY" . -- --branch "$GITHUB_REF_NAME" --single-branch --depth 1
+          gh auth setup-git
+      - name: Descargar exportación oficial y preparar hasta 50000 fichas españolas
+        run: python3 pruebas/tools/build_catalog.py
+      - name: Validar el alcance y publicar solo el catálogo
+        run: |
+          git add pruebas/catalogue
+          python3 - <<'PY'
+          import subprocess
+          names=subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines()
+          if any(not name.startswith('pruebas/catalogue/') for name in names):
+              raise SystemExit('Cambio fuera del catálogo: publicación detenida')
+          PY
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Actualizar catálogo español desde exportación oficial OFF'
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"

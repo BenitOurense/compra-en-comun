@@ -1,0 +1,316 @@
+{
+  "sourceUrl": "https://static.openfoodfacts.org/data/en.openfoodfacts.org.products.csv.gz",
+  "capturedAt": "2026-10-29T17:00:47.574235+00:00",
+  "selection": "Productos comercializados en España; máximo por popularidad y fecha de actualización",
+  "scanned": 4881991,
+  "matchedSpain": 323567,
+  "source": "Open Food Facts",
+  "license": "ODbL",
+  "imageLicense": "CC BY-SA",
+  "schema": 1,
+  "version": "6a5e81be541920adff024492748c24d86b1c10014a00022a3400e6dae5b6790a",
+  "count": 50000,
+  "bytes": 13047776,
+  "shards": [
+    {
+      "path": "products-bb19c13d8ddd21dd.json",
+      "count": 1000,
+      "bytes": 258880,
+      "sha256": "bb19c13d8ddd21dd1680efccc7ed217edc0392c5f4ecd9e97194e0e1fc731ffc"
+    },
+    {
+      "path": "products-0d73fa8f3d4e1479.json",
+      "count": 1000,
+      "bytes": 252141,
+      "sha256": "0d73fa8f3d4e1479c891745622405c764efea015e0b0112c3011019e49fa9f5c"
+    },
+    {
+      "path": "products-1c8e96b68123e1cd.json",
+      "count": 1000,
+      "bytes": 252997,
+      "sha256": "1c8e96b68123e1cddbbd4db1816db70f8b9610ed2cb064e02e41ee120bd4292b"
+    },
+    {
+      "path": "products-7e777b36e946fb25.json",
+      "count": 1000,
+      "bytes": 255334,
+      "sha256": "7e777b36e946fb252f031fb4363f1186adef203f04424214c4839b2f046c4b1f"
+    },
+    {
+      "path": "products-19846b6f8cf577e9.json",
+      "count": 1000,
+      "bytes": 255394,
+      "sha256": "19846b6f8cf577e9469effe0a94560a42f675cd41911a9b14ea08d0e35bdea1e"
+    },
+    {
+      "path": "products-0ef984888d2a3b8d.json",
+      "count": 1000,
+      "bytes": 253807,
+      "sha256": "0ef984888d2a3b8d1d0d74583582c0e560556a7a0b6846ff4d6e18d56c62eeb1"
+    },
+    {
+      "path": "products-a1f436ba9f4fb3bd.json",
+      "count": 1000,
+      "bytes": 259647,
+      "sha256": "a1f436ba9f4fb3bde9d6cb6aed8f69482ae9ab7d65744b2ec3cb018983bf9352"
+    },
+    {
+      "path": "products-e40b7324000c495c.json",
+      "count": 1000,
+      "bytes": 254777,
+      "sha256": "e40b7324000c495cd73a97dc41dbe7e3d7317a0533c94abc4ae9083a96b38c92"
+    },
+    {
+      "path": "products-84b2a29a1a9bb27c.json",
+      "count": 1000,
+      "bytes": 254851,
+      "sha256": "84b2a29a1a9bb27cc98e37f12b22f2910e56fad43378b39dc34815e58ef4288c"
+    },
+    {
+      "path": "products-0c94def808820d56.json",
+      "count": 1000,
+      "bytes": 259202,
+      "sha256": "0c94def808820d565299b3aedd917269e4e5f23337808b23e3f47346a8bbc280"
+    },
+    {
+      "path": "products-e401be1751606514.json",
+      "count": 1000,
+      "bytes": 245220,
+      "sha256": "e401be17516065143d971c031dbd3ced1039f11719b86c8e815b3ee84f5a6471"
+    },
+    {
+      "path": "products-7826c7dfba31f249.json",
+      "count": 1000,
+      "bytes": 264083,
+      "sha256": "7826c7dfba31f249659928960acfb0d06dc0a657d9c74c06df548dc01c9b6c87"
+    },
+    {
+      "path": "products-549b32af71e4391f.json",
+      "count": 1000,
+      "bytes": 233072,
+      "sha256": "549b32af71e4391f36738016985a14cc4666ac1d6af6a2abd71a66a0fd78b6d2"
+    },
+    {
+      "path": "products-5774dc2002e29a67.json",
+      "count": 1000,
+      "bytes": 288525,
+      "sha256": "5774dc2002e29a67fb5242b28fd9b1ef959924eff80f12453acce61e1298b8f6"
+    },
+    {
+      "path": "products-6c5b9433d7939a80.json",
+      "count": 1000,
+      "bytes": 246284,
+      "sha256": "6c5b9433d7939a80dff596675066f0689413162d8a49a724aecbd847b0b0c946"
+    },
+    {
+      "path": "products-3076804ef3288f16.json",
+      "count": 1000,
+      "bytes": 230991,
+      "sha256": "3076804ef3288f16aa2f3796ce0d4a2571eedf39684d6d03d930797f1d8753db"
+    },
+    {
+      "path": "products-ac5fed0a2593b1e4.json",
+      "count": 1000,
+      "bytes": 277343,
+      "sha256": "ac5fed0a2593b1e4b38635bfdaf3663041f6666e340e028cfa34e65326df4b15"
+    },
+    {
+      "path": "products-c5c13be04f5a6c7f.json",
+      "count": 1000,
+      "bytes": 296644,
+      "sha256": "c5c13be04f5a6c7f56ad586c3a7adea707875978b48bdbd18fc4517300826fcf"
+    },
+    {
+      "path": "products-cd47d02d312d854f.json",
+      "count": 1000,
+      "bytes": 253737,
+      "sha256": "cd47d02d312d854f6ffa07f288feeed2ca218c62fc94fd682849cb2095ebd3fd"
+    },
+    {
+      "path": "products-814d1ce7166beb92.json",
+      "count": 1000,
+      "bytes": 232236,
+      "sha256": "814d1ce7166beb92833d2f886910bc530f9f117f3663b7d83b09941bd980a5b7"
+    },
+    {
+      "path": "products-14da7f44bf7953a4.json",
+      "count": 1000,
+      "bytes": 230766,
+      "sha256": "14da7f44bf7953a46e81aa17c958650d81b3655a2f61468a6cb1041c87504f95"
+    },
+    {
+      "path": "products-413e96e4a218fbaf.json",
+      "count": 1000,
+      "bytes": 253216,
+      "sha256": "413e96e4a218fbaf5fe3b5fa8ea4493bc49adc09796ef1b74e59bd2fabd1f573"
+    },
+    {
+      "path": "products-0730a4f11a4ee16a.json",
+      "count": 1000,
+      "bytes": 285547,
+      "sha256": "0730a4f11a4ee16a83e0db436b9fa08941a3a57eedcb32a71509afe9e403984c"
+    },
+    {
+      "path": "products-770115ffe29ed0b9.json",
+      "count": 1000,
+      "bytes": 292817,
+      "sha256": "770115ffe29ed0b96081c659d1a5f2908fc18a17a2f70255e4ce3792fd2e6581"
+    },
+    {
+      "path": "products-a7fe9fae0dbac37b.json",
+      "count": 1000,
+      "bytes": 306329,
+      "sha256": "a7fe9fae0dbac37be5670be24cfbc532901dc0c15789bc965310caba8aac1998"
+    },
+    {
+      "path": "products-e980955d807478a2.json",
+      "count": 1000,
+      "bytes": 263464,
+      "sha256": "e980955d807478a28141923f74a8322ccf46faec9640818bffbc0ce021cf38fd"
+    },
+    {
+      "path": "products-d581a048654e26f2.json",
+      "count": 1000,
+      "bytes": 252312,
+      "sha256": "d581a048654e26f24d3455e19033d12f0570f8f09acc977ab814f77ccfb1aac0"
+    },
+    {
+      "path": "products-d2590eca149424c5.json",
+      "count": 1000,
+      "bytes": 232871,
+      "sha256": "d2590eca149424c5b78248836b993f20d3f8e4085b5a34c76ab2ae5b6d620c8a"
+    },
+    {
+      "path": "products-e71b8deea2cc22ec.json",
+      "count": 1000,
+      "bytes": 229286,
+      "sha256": "e71b8deea2cc22ecfb562dd198ef78bcd467747a500f5695eb78b438631b46b4"
+    },
+    {
+      "path": "products-d1ef02251462c362.json",
+      "count": 1000,
+      "bytes": 226925,
+      "sha256": "d1ef02251462c3623887dd32db8f873601fcc0726532642f99a93c99886d3dfe"
+    },
+    {
+      "path": "products-3e1d7f99a2f9bb94.json",
+      "count": 1000,
+      "bytes": 228484,
+      "sha256": "3e1d7f99a2f9bb94d0680fb5d5aa9fca2970c385950a05cf04c809c67f47716b"
+    },
+    {
+      "path": "products-dbf5b15d178838d7.json",
+      "count": 1000,
+      "bytes": 244273,
+      "sha256": "dbf5b15d178838d7763e64dc44ba74041263e87be1d1b8c0cb8a8162c29984d6"
+    },
+    {
+      "path": "products-e0b14aef9d18687d.json",
+      "count": 1000,
+      "bytes": 253631,
+      "sha256": "e0b14aef9d18687d1581e9e6ff59e531af7591cecec040b87d1754ab03cb6067"
+    },
+    {
+      "path": "products-d621cd061cb9fc9d.json",
+      "count": 1000,
+      "bytes": 257548,
+      "sha256": "d621cd061cb9fc9dc4ee01884d8076ee5916677423a314c4f9749480ff0aa666"
+    },
+    {
+      "path": "products-c74a28e2700a1f65.json",
+      "count": 1000,
+      "bytes": 274396,
+      "sha256": "c74a28e2700a1f652b35ca62bd41dd27b287d6b6d4675fc0fccfcad8219aed8d"
+    },
+    {
+      "path": "products-f75b134691b3c3de.json",
+      "count": 1000,
+      "bytes": 276547,
+      "sha256": "f75b134691b3c3de391e76b7d5667b7bc6c3a90d1209c2a0cc6a404ba5360957"
+    },
+    {
+      "path": "products-9909941683180910.json",
+      "count": 1000,
+      "bytes": 293986,
+      "sha256": "99099416831809106aafd734c824f9844ef4c014cdf0b55dea512ab2248778f2"
+    },
+    {
+      "path": "products-073ecf9b979d2215.json",
+      "count": 1000,
+      "bytes": 296054,
+      "sha256": "073ecf9b979d221576c4a9e8b793c90395da37ad691e97007863988c4a0db798"
+    },
+    {
+      "path": "products-af7a08c97e14e151.json",
+      "count": 1000,
+      "bytes": 295274,
+      "sha256": "af7a08c97e14e1513ed8c341c87b4b1c0d1a6cba6757d16c524f98e0bb5fd2bd"
+    },
+    {
+      "path": "products-f9948b90efdecbdd.json",
+      "count": 1000,
+      "bytes": 286201,
+      "sha256": "f9948b90efdecbdd34e3f9f6b4d0764a5bdea9abf9e508789090f792bf8e42a6"
+    },
+    {
+      "path": "products-963ce30421bb1b0f.json",
+      "count": 1000,
+      "bytes": 300999,
+      "sha256": "963ce30421bb1b0f4393a9e7ed7672f3b8955897e40e6d77764aaef972ba39a0"
+    },
+    {
+      "path": "products-1f7b071fb2f30915.json",
+      "count": 1000,
+      "bytes": 306330,
+      "sha256": "1f7b071fb2f309151b54dc5bb0188b11c779b7067e954a21d4a5900975eaf495"
+    },
+    {
+      "path": "products-4fc1c12799b0f258.json",
+      "count": 1000,
+      "bytes": 286303,
+      "sha256": "4fc1c12799b0f258b46c25b53a09fcdc8bcee5c1fe95c7580bf10ee2541ef13b"
+    },
+    {
+      "path": "products-bf1cad2b81a732e8.json",
+      "count": 1000,
+      "bytes": 265390,
+      "sha256": "bf1cad2b81a732e88a9c142599ffe8b48c63c747fc5dd50defdb2befddcfbb29"
+    },
+    {
+      "path": "products-82fe8eebcc37a0b5.json",
+      "count": 1000,
+      "bytes": 278789,
+      "sha256": "82fe8eebcc37a0b581a5f011e512e75aa37acd9a948b34196edddddb99ba4db4"
+    },
+    {
+      "path": "products-599a69d751469588.json",
+      "count": 1000,
+      "bytes": 257882,
+      "sha256": "599a69d751469588a360d1fcd523bbc38528c00eb3456f9c25e6166faf2120a9"
+    },
+    {
+      "path": "products-36f6b74027a97218.json",
+      "count": 1000,
+      "bytes": 236522,
+      "sha256": "36f6b74027a97218e6a6f4efd783fb9dcdf4939639a9acb2ca8cb30bc3c1eb4f"
+    },
+    {
+      "path": "products-5655c927c2df2fdf.json",
+      "count": 1000,
+      "bytes": 245440,
+      "sha256": "5655c927c2df2fdf0d57f3fb8efdb3090c431bdf19234bee24db6ea4cf4a745c"
+    },
+    {
+      "path": "products-bf3935700e897ac9.json",
+      "count": 1000,
+      "bytes": 233114,
+      "sha256": "bf3935700e897ac954ba35590a235a97126b86e5f080b6910fd4d2dfe3837e64"
+    },
+    {
+      "path": "products-bc2149fb7942e2d8.json",
+      "count": 1000,
+      "bytes": 231915,
+      "sha256": "bc2149fb7942e2d8b1fbf7ee4e1bef653215de334ed97f3827fff124cae84fe5"
+    }
+  ]
+}
