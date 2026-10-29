@@ -12,6 +12,7 @@
 
 - Buscar en internet solicita una consulta nueva, sin reutilizar silenciosamente una respuesta vacía guardada durante 24 horas.
 - La caché recuerda que un nombre comercial apareció al buscar un término genérico: buscar «galletas» puede recuperar Príncipe aunque esa palabra no figure en el nombre comercial.
+- Los resultados locales permanecen disponibles mientras se consulta internet, para poder añadir sin esperar a la respuesta externa.
 - Ante fallo de la consulta externa, se muestran resultados anteriores con un aviso explícito. No se presenta una caché como conexión online correcta.
 - `catalogo-off-es.json` contiene seis fichas reales recuperadas de la consulta de Open Food Facts realizada el 29/10/2026 a las 14:17:10 UTC. Conserva nombre, marca, EAN, URL de miniatura, alérgenos, trazas y tiendas de la fuente. El fichero incluye fuente, fecha y licencias. Se carga una vez, junto al vocabulario local, sin consultas externas por cada letra.
 - Con caché vacía, esta muestra permite encontrar Príncipe buscando «galletas». Es una muestra pequeña, no un catálogo masivo ni una ficha inventada. Una ficha más reciente no se sobrescribe al cargar esta muestra.
