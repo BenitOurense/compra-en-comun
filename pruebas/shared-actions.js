@@ -16,7 +16,10 @@
     const current=await tx.get(group(id));
     if(!current.exists())throw Error('Esta lista ya no existe.');
     if(current.data().ownerUid!==uid)throw Error('Solo el propietario puede eliminar esta lista para todos.');
-    for(const other of ids){tx.delete(member(id,other));tx.delete(share(id,other));}
+    // userShares is private to each account. The group owner cannot delete
+    // another account's shortcut. Removing the group/membership revokes access.
+    for(const other of ids)tx.delete(member(id,other));
+    tx.delete(share(id,uid));
     tx.delete(group(id));
    });
   }
@@ -39,6 +42,17 @@
     tx.update(group(id),{ownerUid:nextUid});
    });
   }
+  async function kick(uid,id,targetUid){
+   account(uid);
+   if(!targetUid||targetUid===uid)throw Error('Para salir utiliza Salir de la lista.');
+   await fs.runTransaction(db,async tx=>{
+    const current=await tx.get(group(id)),self=await tx.get(member(id,uid));
+    if(!current.exists())throw Error('Esta lista ya no existe.');
+    if(current.data().ownerUid!==uid&&self.data()?.role!=='admin')throw Error('Solo los administradores pueden expulsar participantes.');
+    if(current.data().ownerUid===targetUid)throw Error('No se puede expulsar al propietario.');
+    tx.delete(member(id,targetUid));
+   });
+  }
   async function accept(uid,token,alias){
    account(uid);
    // A new member cannot read the private group before joining. Invitation
@@ -52,7 +66,7 @@
    await fs.setDoc(member(id,uid),{joinedAt:fs.serverTimestamp(),inviteId:token,alias:String(alias||'Miembro').slice(0,40)},{merge:true});
    await fs.setDoc(share(id,uid),{joinedAt:fs.serverTimestamp()},{merge:true});return id;
   }
-  return {remove,leave,transfer,accept};
+  return {remove,leave,transfer,kick,accept};
  }
  root.SharedActions={create};
 })(globalThis);
