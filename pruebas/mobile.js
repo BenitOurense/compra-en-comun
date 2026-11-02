@@ -4,7 +4,7 @@ function stopScanner(){scannerGeneration++;clearTimeout(scannerTimer);scannerTim
 function manualBarcode(){if(!$('scanner-dialog').open)return;stopScanner();$('scanner-dialog').dataset.mode='manual';$('scanner-video').hidden=true;$('scanner-resume').hidden=false;$('scanner-status').textContent='Cámara detenida. Escribe el código del envase o vuelve a la cámara.';}
 function closeScanner(){stopScanner();$('barcode-input').blur();$('scanner-dialog').close();if(document.activeElement?.matches('input,textarea'))document.activeElement.blur();}
 async function startScanner({resetCode=true}={}){
- stopScanner();const generation=scannerGeneration,dialog=$('scanner-dialog'),status=$('scanner-status');
+ stopScanner();if(typeof resetScannerResult==='function')resetScannerResult();const generation=scannerGeneration,dialog=$('scanner-dialog'),status=$('scanner-status');
  const current=()=>generation===scannerGeneration&&dialog.open;
  document.activeElement?.blur();if(resetCode)$('barcode-input').value='';dialog.dataset.mode='camera';$('scanner-video').hidden=false;$('scanner-resume').hidden=true;
  // An explicit autofocus target prevents showModal from opening the numeric keyboard.
@@ -25,14 +25,14 @@ async function startScanner({resetCode=true}={}){
    reader.possibleFormats=[decoder.BarcodeFormat.EAN_13,decoder.BarcodeFormat.EAN_8,decoder.BarcodeFormat.UPC_A];
    const controls=await reader.decodeFromStream(stream,video,(result,error,control)=>{
     if(!current()){control.stop();return;}
-    const code=result?.getText();if(code&&ProductCatalog.validCode(code)){control.stop();closeScanner();consultCatalog(code);}
+    const code=result?.getText();if(code&&ProductCatalog.validCode(code)){control.stop();if(typeof lookupScannedCode==='function')lookupScannedCode(code);else{closeScanner();consultCatalog(code);}}
    });
    if(!current()){controls.stop();return;}scannerControls=controls;return;
   }
   dialog.dataset.reader='native';await video.play();if(!current())return;
   const detect=async()=>{
    if(!current())return;
-   try{const results=await detector.detect(video);if(!current())return;const found=results.find(r=>ProductCatalog.validCode(r.rawValue));if(found){closeScanner();await consultCatalog(found.rawValue);return;}}
+   try{const results=await detector.detect(video);if(!current())return;const found=results.find(r=>ProductCatalog.validCode(r.rawValue));if(found){if(typeof lookupScannedCode==='function')await lookupScannedCode(found.rawValue);else{closeScanner();await consultCatalog(found.rawValue);}return;}}
    catch{if(!current())return;stopScanner();$('scanner-resume').hidden=false;status.textContent='No se puede leer la cámara. Puedes reintentar o tocar el campo para escribir el código.';return;}
    scannerTimer=setTimeout(detect,350);
   };detect();
@@ -44,7 +44,7 @@ $('barcode-input').addEventListener('focus',manualBarcode);
 $('scanner-close').addEventListener('click',closeScanner);
 $('scanner-dialog').addEventListener('close',stopScanner);
 $('scanner-dialog').addEventListener('cancel',stopScanner);
-$('barcode-form').addEventListener('submit',e=>{e.preventDefault();const code=$('barcode-input').value.trim();if(!ProductCatalog.validCode(code)){$('scanner-status').textContent='Revisa el código: debe ser un EAN/UPC válido de 8, 12, 13 o 14 cifras.';return;}closeScanner();consultCatalog(code);});
+$('barcode-form').addEventListener('submit',e=>{e.preventDefault();const code=$('barcode-input').value.trim();if(!ProductCatalog.validCode(code)){$('scanner-status').textContent='Revisa el código: debe ser un EAN/UPC válido de 8, 12, 13 o 14 cifras.';return;}if(typeof lookupScannedCode==='function')lookupScannedCode(code);else{closeScanner();consultCatalog(code);}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){stopScanner();if($('scanner-dialog').open){$('scanner-resume').hidden=false;$('scanner-status').textContent='Cámara detenida. Pulsa Volver a la cámara para continuar.';}}});
 window.addEventListener('pagehide',stopScanner);
 let installPrompt=null;
@@ -52,3 +52,12 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installProm
 $('install-app').addEventListener('click',async()=>{if(!installPrompt)return;const prompt=installPrompt;installPrompt=null;try{await prompt.prompt();const result=await prompt.userChoice;$('install-status').textContent=result.outcome==='accepted'?'Instalación solicitada.':'Puedes instalarla después desde el menú del navegador.';}catch{$('install-status').textContent='Puedes instalarla desde el menú del navegador.';}$('install-app').hidden=true;});
 window.addEventListener('appinstalled',()=>{$('install-app').hidden=true;$('install-status').textContent='Aplicación instalada.';});
 if('serviceWorker' in navigator&&window.isSecureContext)navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{$('install-status').textContent='No se ha podido preparar la instalación. Puedes seguir usando la web.';});
+
+
+async function focusScannerCamera(event){
+ if(!scannerStream)return;
+ const rect=$('scanner-video').getBoundingClientRect(),x=event?.clientX==null ? .5 : (event.clientX-rect.left)/rect.width,y=event?.clientY==null ? .5 : (event.clientY-rect.top)/rect.height;
+ const generation=scannerGeneration;
+ try{const result=await CameraFocus.focus(scannerStream.getVideoTracks?.()[0]||scannerStream.getTracks()[0],x,y);if(generation!==scannerGeneration)return;$('scanner-status').textContent=result==='unsupported'?'Este navegador no permite solicitar el enfoque. Mantén el código centrado y aleja un poco el envase.':result==='point'?'Enfoque solicitado en el punto que has tocado.':'Enfoque de la cámara solicitado. Mantén el código centrado.';}catch{if(generation===scannerGeneration)$('scanner-status').textContent='No se pudo ajustar el enfoque. Prueba a alejar un poco el envase.';}
+}
+$('scanner-video').addEventListener('click',focusScannerCamera);

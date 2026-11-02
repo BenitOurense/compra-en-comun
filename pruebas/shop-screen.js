@@ -1,0 +1,45 @@
+'use strict';
+(function(root){
+ let cataloguePromise=null;
+ const euro=cents=>(cents/100).toLocaleString('es-ES',{style:'currency',currency:'EUR'});
+ const el=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
+ const button=(text,run,cls='secondary')=>{const b=el('button',text,cls);b.type='button';b.onclick=run;return b;};
+ function source(o){const p=el('p',o.scope+' · '+new Date(o.observedAt).toLocaleDateString('es-ES'),'muted');if(o.sourceUrl){const a=el('a','Ver precio en origen');a.href=o.sourceUrl;a.target='_blank';a.rel='noopener noreferrer';p.append(' · ',a);}return p;}
+ async function render({element,uid,list,markets,isCurrent}){
+  element.replaceChildren(el('p','Cargando referencias disponibles…','muted'));
+  if(!cataloguePromise)cataloguePromise=fetch('./price-catalogue.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error();return r.json();}).then(d=>d.offers.map(ShopPrices.sanitize)).catch(()=>[]);
+  const publicOffers=await cataloguePromise;if(!isCurrent())return;
+  const selected=new Set(markets.length?markets:['Gadis','Carrefour']);
+  const draw=()=>{
+   if(!isCurrent())return;element.replaceChildren();const title=el('h2','Voy al súper · '+list.name);
+   const note=el('p','Compara referencias para los productos de esta lista. Revisa que coincidan el producto y el formato. Los precios online pueden variar por tienda, código postal y promociones.','muted');
+   const limits=el('p','La muestra inicial es pequeña y no se actualiza en directo. Puedes anotar precios e importar catálogos. Los precios de más de 7 días se excluyen de los cálculos.','muted');
+   const choices=el('fieldset'),legend=el('legend','Supermercados que quieres comparar');choices.append(legend);
+   for(const m of SUPERMARKETS){const label=el('label',undefined,'shop-market-choice'),check=el('input');check.type='checkbox';check.checked=selected.has(m);check.onchange=()=>{check.checked?selected.add(m):selected.delete(m);draw();};label.append(check,document.createTextNode(m));choices.append(label);}
+   const currentMarkets=[...selected],result=ShopPrices.compare(uid,list,currentMarkets,publicOffers),summary=el('section',undefined,'shop-summary');
+   if(currentMarkets.length<2)summary.append(el('p','Selecciona al menos dos supermercados para compararlos.'));
+   if(!result.rows.length)summary.append(el('p','La lista está vacía. Añade productos para comparar.'));
+   for(const total of result.totals){const p=el('p');p.append(el('strong',total.market+': '+euro(total.totalCents)),document.createTextNode(' · '+total.covered+'/'+total.count+' productos con precio'+(total.complete?'':' · subtotal parcial')));summary.append(p);}
+   if(!result.formatsMatch)summary.append(el('p','Los formatos elegidos no coinciden. Comprueba los envases antes de comparar los totales.'));
+   if(result.cheapest){const sorted=[...result.totals].sort((a,b)=>a.totalCents-b.totalCents),tie=sorted.filter(t=>t.totalCents===sorted[0].totalCents);summary.append(el('p',tie.length>1?'Empate entre las referencias más bajas: '+tie.map(t=>t.market).join(', '):'Menor total entre estas referencias: '+result.cheapest,'shop-verdict'));}
+   else if(currentMarkets.length>=2&&result.rows.length)summary.append(el('p','Faltan precios para comparar toda la lista. Un subtotal menor puede deberse a productos sin precio.'));
+   if(result.commonCount>0&&result.commonCount<result.rows.length&&currentMarkets.length>=2)summary.append(el('p','Solo los '+result.commonCount+' productos con precio en todos: '+result.totals.map(t=>t.market+' '+euro(t.commonCents)).join(' · ')));
+   const feedback=el('p','');feedback.id='shop-feedback';feedback.setAttribute('role','status');
+   const tools=el('div',undefined,'shop-tools');
+   tools.append(button('Exportar comparación para Excel',()=>{const blob=new Blob([ShopPrices.csv(result,currentMarkets)],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download='Market-Sinc-comparacion.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}),button('Abrir Gadisline',()=>window.open('https://www.gadisline.com/','_blank','noopener')),button('Abrir Carrefour',()=>window.open('https://www.carrefour.es/supermercado','_blank','noopener')));
+   const label=el('label','Importar catálogo de precios (JSON)'),file=el('input');file.type='file';file.accept='.json,application/json';label.append(file);file.onchange=async()=>{const chosen=file.files?.[0];if(!chosen)return;try{if(chosen.size>2*1024*1024)throw Error('El archivo supera los 2 MB.');const input=JSON.parse(await chosen.text());if(!isCurrent())return;const count=ShopPrices.importOffers(uid,input);draw();element.querySelector('#shop-feedback').textContent=count+' precios importados para esta cuenta en este móvil.';}catch(error){feedback.textContent='No se ha importado el catálogo. '+error.message;}};
+   const format=el('details'),formatTitle=el('summary','Formato del archivo de precios');format.append(formatTitle,el('p','Cada registro necesita market, name, pack, price y observedAt. code (EAN) y sourceUrl son opcionales. Importe por envase y fecha ISO. Ejemplo:'),el('pre','{"offers":[{"market":"Gadis","name":"Producto","pack":"1 envase de 1 l","price":1.25,"observedAt":"'+new Date().toISOString().slice(0,10)+'T12:00:00Z"}]}'));
+   element.append(title,note,limits,choices,summary,tools,label,format,feedback);
+   const offers=ShopPrices.catalogue(uid,publicOffers);
+   for(const row of result.rows){const card=el('article',undefined,'shop-item'),h=el('h3',row.item.name),quantityLabel=el('label','Envases que necesitas'),quantity=el('input');quantity.type='number';quantity.min='1';quantity.max='999';quantity.step='1';quantity.value=row.quantity;quantity.onchange=()=>{try{ShopPrices.setQuantity(uid,list.id,row.item.id,quantity.value);draw();}catch(error){feedback.textContent=error.message;}};quantityLabel.append(quantity);card.append(h,quantityLabel);
+    for(const m of currentMarkets){const block=el('section',undefined,'shop-price'),offer=row.offers[m];block.append(el('h4',m));if(offer){block.append(el('p',euro(Math.round(offer.price*100))+' / '+offer.pack+' · '+euro(Math.round(offer.price*100)*row.quantity)),source(offer));}else block.append(el('p','Sin precio válido para este producto.','muted'));
+     const details=el('details'),summary=el('summary','Elegir producto o anotar precio'),searchLabel=el('label','Buscar en el catálogo disponible de '+m),search=el('input');search.type='search';search.value=row.item.name;search.placeholder='Nombre o código de barras';searchLabel.append(search);const candidates=el('div',undefined,'shop-candidates');
+     function matches(){candidates.replaceChildren();const words=ShopPrices.norm(search.value).split(/\s+/).filter(Boolean);const found=offers.filter(o=>o.market===m&&ShopPrices.current(o)&&words.every(w=>ShopPrices.norm(o.name+' '+o.code+' '+o.pack).includes(w))).slice(0,12);if(!found.length)candidates.append(el('p','No hay coincidencias en el catálogo descargado. Puedes anotar el precio.','muted'));for(const o of found){const b=button(o.name+' · '+o.pack+' · '+euro(Math.round(o.price*100)),()=>{try{ShopPrices.setLink(uid,list.id,row.item.id,m,o.id);draw();}catch(error){feedback.textContent='No se pudo guardar la elección. '+error.message;}});candidates.append(b,source(o));}}
+     search.oninput=matches;matches();const form=el('form',undefined,'shop-price-form'),nameLabel=el('label','Producto y marca'),name=el('input');name.required=true;name.maxLength=160;name.value=row.item.name;nameLabel.append(name);const packLabel=el('label','Formato exacto (ej.: botella de 2 l)'),pack=el('input');pack.required=true;pack.maxLength=80;packLabel.append(pack);const priceLabel=el('label','Precio por envase (€)'),price=el('input');price.required=true;price.inputMode='decimal';price.placeholder='Ej.: 1,25';priceLabel.append(price);const urlLabel=el('label','Enlace del precio (opcional)'),url=el('input');url.type='url';url.placeholder='https://…';urlLabel.append(url);const submit=el('button','Guardar este precio');submit.type='submit';form.append(nameLabel,packLabel,priceLabel,urlLabel,submit);form.onsubmit=e=>{e.preventDefault();try{const id='personal:'+JSON.stringify([list.id,row.item.id,m]);ShopPrices.importOffers(uid,[{id,market:m,name:name.value,pack:pack.value,price:price.value,observedAt:new Date().toISOString(),sourceUrl:url.value,scope:'Precio anotado por ti; confirma tienda y promociones'}]);ShopPrices.setLink(uid,list.id,row.item.id,m,id);draw();}catch(error){feedback.textContent='No se ha guardado el precio. '+error.message;}};
+     details.append(summary,el('p','Elige el mismo producto y formato en cada supermercado. Una elección manual no verifica alérgenos.','muted'),searchLabel,candidates,form);if(offer)details.append(button('Quitar elección de este producto',()=>{try{ShopPrices.setLink(uid,list.id,row.item.id,m,null);draw();}catch(error){feedback.textContent=error.message;}}));block.append(details);card.append(block);
+    }element.append(card);
+   }
+  };draw();
+ }
+ root.ShopScreen={render};
+})(globalThis);

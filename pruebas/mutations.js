@@ -9,8 +9,10 @@
  case 'rename':return {name:operation.name};
  case 'deduplicate':return {items:deduplicate(items)};
  case 'add':{const unique=deduplicate(items);if(findDuplicate(unique,operation.item))return {items:unique};if(unique.length>=500)throw Error('La lista admite hasta 500 productos.');return {items:[...unique,operation.item]};}
+ case 'replaceProduct':return {items:items.map(i=>i.id===operation.id?{...i,name:operation.name,product:operation.product}:i)};
  case 'toggle':return {items:items.map(i=>i.id===operation.id?{...i,done:operation.done}:i)};
  case 'remove':{const ids=new Set(operation.ids);return {items:items.filter(i=>!ids.has(i.id))};}
  default:throw Error('Cambio no reconocido.');}}
  root.ListMutations={identity,findDuplicate,deduplicate,apply};
 })(globalThis);
+

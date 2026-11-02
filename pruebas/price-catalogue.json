@@ -1,0 +1,12 @@
+{
+  "description": "Muestra inicial de referencias públicas. No es un catálogo completo ni una conexión en directo a las aplicaciones. Sin tienda o código postal confirmado.",
+  "offers": [
+    {"id":"gadis-pascual-desnatada-1l","market":"Gadis","name":"Leche desnatada Pascual","pack":"Brik 1 l","price":1.25,"observedAt":"2026-11-02T00:00:00Z","origin":"public","scope":"Referencia de Gadisline consultada el 02/11/2026; sin tienda confirmada","sourceUrl":"https://www.gadisline.com/leche-desnatada-pascual-brik-1-l"},
+    {"id":"gadis-pascual-semi-1l","market":"Gadis","name":"Leche semidesnatada Pascual","pack":"Brik 1 l","price":1.35,"observedAt":"2026-11-02T00:00:00Z","origin":"public","scope":"Referencia de Gadisline consultada el 02/11/2026; sin tienda confirmada","sourceUrl":"https://www.gadisline.com/gl/lacteos/leite-e-bebidas-vexetais"},
+    {"id":"gadis-cocacola-2l","market":"Gadis","name":"Coca-Cola original","pack":"Botella 2 l","price":2.15,"observedAt":"2026-11-02T00:00:00Z","origin":"public","scope":"Referencia de Gadisline consultada el 02/11/2026; sin tienda confirmada","sourceUrl":"https://www.gadisline.com/refresco-coca-cola-normal-botella-2-l"},
+    {"id":"carrefour-pascual-entera-1l","market":"Carrefour","name":"Leche entera Pascual","pack":"Brik 1 l","price":1.41,"observedAt":"2026-11-02T00:00:00Z","origin":"public","scope":"Referencia web consultada el 02/11/2026; sin código postal confirmado","sourceUrl":"https://www.carrefour.es/supermercado/la-despensa-pascual/F-13ji8Z11cy/c"},
+    {"id":"dia-pascual-entera-1l","market":"DIA","name":"Leche entera Pascual","pack":"Brik 1 l","price":1.39,"observedAt":"2026-11-02T00:00:00Z","origin":"public","scope":"Referencia web consultada el 02/11/2026; sin tienda confirmada ni cupones","sourceUrl":"https://www.dia.es/huevos-leche-y-mantequilla/leche/pascual/c/13uoF19jb"},
+    {"id":"dia-pascual-semi-1l","market":"DIA","name":"Leche semidesnatada Pascual","pack":"Brik 1 l","price":1.35,"observedAt":"2026-11-02T00:00:00Z","origin":"public","scope":"Referencia web consultada el 02/11/2026; sin tienda confirmada ni cupones","sourceUrl":"https://www.dia.es/huevos-leche-y-mantequilla/leche/pascual/c/13uoF19jb"},
+    {"id":"dia-pascual-desnatada-1l","market":"DIA","name":"Leche desnatada Pascual","pack":"Brik 1 l","price":1.29,"observedAt":"2026-11-02T00:00:00Z","origin":"public","scope":"Referencia web consultada el 02/11/2026; sin tienda confirmada ni cupones","sourceUrl":"https://www.dia.es/huevos-leche-y-mantequilla/leche/pascual/c/13uoF19jb"}
+  ]
+}

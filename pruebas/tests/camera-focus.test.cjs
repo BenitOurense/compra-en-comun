@@ -1,0 +1,5 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
+const c={};vm.runInNewContext(fs.readFileSync(__dirname+'/../camera-focus.js','utf8'),c);
+test('tocar pide enfoque puntual solo si la cámara lo anuncia',async()=>{let constraints;const track={getCapabilities:()=>({pointsOfInterest:true,focusMode:['single-shot','continuous']}),applyConstraints:async value=>constraints=value};assert.equal(await c.CameraFocus.focus(track,2,-1),'point');assert.equal(constraints.advanced[0].pointsOfInterest[0].x,1);assert.equal(constraints.advanced[0].pointsOfInterest[0].y,0);assert.equal(constraints.advanced[0].focusMode,'single-shot');});
+test('usa enfoque continuo si es lo disponible sin atribuir soporte de punto',async()=>{const track={getCapabilities:()=>({focusMode:['continuous']}),applyConstraints:async()=>{}};assert.equal(await c.CameraFocus.focus(track),'continuous');});
+test('no promete enfoque si el navegador no lo permite',async()=>{assert.equal(await c.CameraFocus.focus({getCapabilities:()=>({}),applyConstraints:async()=>{throw Error('No debe llamarse');}}),'unsupported');});
