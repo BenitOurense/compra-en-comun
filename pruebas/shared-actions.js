@@ -18,7 +18,10 @@
     if(current.data().ownerUid!==uid)throw Error('Solo el propietario puede eliminar esta lista para todos.');
     // userShares is private to each account. The group owner cannot delete
     // another account's shortcut. Removing the group/membership revokes access.
-    for(const other of ids)tx.delete(member(id,other));
+    // Deployed rules forbid deleting the current owner's membership, even
+    // in a transaction deleting the group. Keep that metadata document;
+    // removing the parent deletes the list content for every participant.
+    for(const other of ids)if(other!==uid)tx.delete(member(id,other));
     tx.delete(share(id,uid));
     tx.delete(group(id));
    });
@@ -60,13 +63,32 @@
    const invitation=await fs.getDoc(fs.doc(db,'invitations',token));
    if(!invitation.exists()||invitation.data().expiresAt.toMillis()<Date.now())throw Error('La invitación ha caducado. Pide una nueva.');
    const id=invitation.data().listId;
-   // Merge preserves an existing administrator's role on repeated acceptance.
-   // Keep membership first: deployed rules may require it to exist before
-   // writing the user's shortcut. A retry is safe if that second write fails.
-   await fs.setDoc(member(id,uid),{joinedAt:fs.serverTimestamp(),inviteId:token,alias:String(alias||'Miembro').slice(0,40)},{merge:true});
-   await fs.setDoc(share(id,uid),{joinedAt:fs.serverTimestamp()},{merge:true});return id;
+   const name=String(alias||'Miembro').trim().slice(0,40)||'Miembro';
+   // New members cannot read memberships yet. Only permission-denied means
+   // we should try creating one; connectivity failures must remain failures.
+   let existing=null;
+   try{existing=await fs.getDoc(member(id,uid));}catch(error){if(error.code!=='permission-denied')throw error;}
+   if(!existing?.exists()){
+    try{await fs.setDoc(member(id,uid),{joinedAt:fs.serverTimestamp(),inviteId:token,alias:name});}
+    catch(error){
+     if(error.code!=='permission-denied')throw error;
+     // Another tab may have completed the join in the meantime.
+     existing=await fs.getDoc(member(id,uid));
+     if(!existing.exists())throw error;
+    }
+   }
+   // Rules allow changing only alias on an existing membership. Preserve
+   // joinedAt, inviteId and role, including when retrying a partial join.
+   if(existing?.exists()&&existing.data().alias!==name)await fs.updateDoc(member(id,uid),{alias:name});
+   const current=await fs.getDoc(group(id));
+   if(!current.exists())throw Error('Esta lista ya no existe. Pide una nueva invitación.');
+   // Personal shortcuts are create/delete only in the deployed rules.
+   const shortcut=await fs.getDoc(share(id,uid));
+   if(!shortcut.exists())await fs.setDoc(share(id,uid),{joinedAt:fs.serverTimestamp()});
+   return id;
   }
   return {remove,leave,transfer,kick,accept};
  }
  root.SharedActions={create};
 })(globalThis);
+
