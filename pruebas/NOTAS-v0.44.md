@@ -18,7 +18,7 @@ price-catalogue.json contiene una muestra inicial muy pequeña de referencias p�
 
 ## Validación y límites
 
-142 pruebas JavaScript superadas antes de publicar, incluyendo registro manual, aislamiento por cuenta, coexistencia manual/catálogo, eliminación, sustitución sin duplicado, fallo de guardado, respuestas tardías, capacidades de enfoque, precios incompletos/antiguos, cantidades, formatos, importación atómica y exportación. Sintaxis de todos los módulos comprobada.
+143 pruebas JavaScript superadas antes de publicar, incluyendo registro manual, aislamiento por cuenta, coexistencia manual/catálogo, eliminación, sustitución sin duplicado, fallo de guardado, respuestas tardías, capacidades de enfoque, precios incompletos/antiguos, cantidades, formatos, importación atómica y exportación. Sintaxis de todos los módulos comprobada.
 
 Prueba visual en Chromium realizada con el código 5400265044941: permanece en el lector, permite guardar nombre y marca, presenta ambas fichas cuando aparece la del catálogo y sustituye la de la lista sin duplicado. Comprobados también la vinculación de la referencia de Gadis y la anotación de un precio de prueba de Carrefour, manteniendo el aviso de cobertura incompleta. No equivale a una prueba de cámara física ni de sincronización real.
 
