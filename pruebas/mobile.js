@@ -2,14 +2,14 @@
 let scannerStream=null,scannerTimer=null,scannerGeneration=0,scannerControls=null;
 function stopScanner(){scannerGeneration++;clearTimeout(scannerTimer);scannerTimer=null;const controls=scannerControls;scannerControls=null;if(controls){try{Promise.resolve(controls.stop()).catch(()=>{});}catch{}}if(scannerStream)scannerStream.getTracks().forEach(t=>t.stop());scannerStream=null;const video=document.getElementById('scanner-video');if(video)video.srcObject=null;}
 function manualBarcode(){if(!$('scanner-dialog').open)return;stopScanner();$('scanner-dialog').dataset.mode='manual';$('scanner-video').hidden=true;$('scanner-resume').hidden=false;$('scanner-status').textContent='Cámara detenida. Escribe el código del envase o vuelve a la cámara.';}
-function closeScanner(){stopScanner();$('barcode-input').blur();$('scanner-dialog').close();if(document.activeElement?.matches('input,textarea'))document.activeElement.blur();}
+function closeScanner(){if(typeof CameraPermissions!=='undefined')CameraPermissions.close();stopScanner();$('barcode-input').blur();$('scanner-dialog').close();if(document.activeElement?.matches('input,textarea'))document.activeElement.blur();}
 async function startScanner({resetCode=true}={}){
- stopScanner();if(typeof resetScannerResult==='function')resetScannerResult();const generation=scannerGeneration,dialog=$('scanner-dialog'),status=$('scanner-status');
+ if(typeof CameraPermissions!=='undefined')CameraPermissions.close();stopScanner();if(typeof resetScannerResult==='function')resetScannerResult();const generation=scannerGeneration,dialog=$('scanner-dialog'),status=$('scanner-status');
  const current=()=>generation===scannerGeneration&&dialog.open;
- document.activeElement?.blur();if(resetCode)$('barcode-input').value='';dialog.dataset.mode='camera';$('scanner-video').hidden=false;$('scanner-resume').hidden=true;
+ document.activeElement?.blur();if(resetCode)$('barcode-input').value='';dialog.dataset.mode='camera';dialog.dataset.cameraError='';if($('scanner-camera-message'))$('scanner-camera-message').hidden=true;$('scanner-video').hidden=false;$('scanner-resume').hidden=true;
  // An explicit autofocus target prevents showModal from opening the numeric keyboard.
  if(!dialog.open)dialog.showModal();$('scanner-close').focus({preventScroll:true});status.textContent='Preparando cámara…';
- if(!window.isSecureContext||!navigator.mediaDevices?.getUserMedia){status.textContent='No se puede acceder a la cámara en este navegador. Toca el campo para escribir el código.';return;}
+ if(!window.isSecureContext||!navigator.mediaDevices?.getUserMedia){$('scanner-resume').hidden=false;status.textContent='No se puede acceder a la cámara en este navegador. Toca el campo para escribir el código.';return;}
  try{
   let detector=null,decoder=null;
   if('BarcodeDetector' in window){try{const supported=await BarcodeDetector.getSupportedFormats();if(!current())return;const formats=['ean_13','ean_8','upc_a'].filter(f=>supported.includes(f));if(formats.length)detector=new BarcodeDetector({formats});}catch{/* Use the bundled decoder when native detection is unavailable. */}}
@@ -36,13 +36,19 @@ async function startScanner({resetCode=true}={}){
    catch{if(!current())return;stopScanner();$('scanner-resume').hidden=false;status.textContent='No se puede leer la cámara. Puedes reintentar o tocar el campo para escribir el código.';return;}
    scannerTimer=setTimeout(detect,350);
   };detect();
- }catch(e){if(!current())return;stopScanner();$('scanner-resume').hidden=false;status.textContent=e.name==='NotAllowedError'?'No hay permiso para usar la cámara. Puedes volver a intentarlo o escribir el código.':'No se ha podido iniciar el lector. Puedes volver a intentarlo o escribir el código.';}
+ }catch(e){if(!current())return;stopScanner();$('scanner-resume').hidden=false;
+  const denied=typeof CameraPermissions!=='undefined'?CameraPermissions.isDenied(e):e.name==='NotAllowedError';
+  dialog.dataset.cameraError=denied?'permission':'other';
+  if($('scanner-camera-message')){$('scanner-camera-message').hidden=false;$('scanner-camera-message').textContent=denied?'Toca para revisar los permisos de cámara':'Toca para volver a intentar abrir la cámara';}
+  status.textContent=denied?'No tienes permisos para abrir la cámara.':e.name==='NotFoundError'?'No se encuentra ninguna cámara en este dispositivo. Puedes escribir el código.':e.name==='NotReadableError'?'La cámara está ocupada o no está disponible. Cierra otras aplicaciones que la estén usando y reintenta.':'No se ha podido iniciar el lector. Puedes volver a intentarlo o escribir el código.';
+  if(denied&&typeof CameraPermissions!=='undefined')CameraPermissions.show();
+ }
 }
 $('scan-open').addEventListener('click',()=>startScanner());
 $('scanner-resume').addEventListener('click',()=>startScanner({resetCode:false}));
 $('barcode-input').addEventListener('focus',manualBarcode);
 $('scanner-close').addEventListener('click',closeScanner);
-$('scanner-dialog').addEventListener('close',stopScanner);
+$('scanner-dialog').addEventListener('close',()=>{stopScanner();if(typeof CameraPermissions!=='undefined'){CameraPermissions.close();const help=$('camera-permissions-help');if(help)help.hidden=true;}});
 $('scanner-dialog').addEventListener('cancel',stopScanner);
 $('barcode-form').addEventListener('submit',e=>{e.preventDefault();const code=$('barcode-input').value.trim();if(!ProductCatalog.validCode(code)){$('scanner-status').textContent='Revisa el código: debe ser un EAN/UPC válido de 8, 12, 13 o 14 cifras.';return;}if(typeof lookupScannedCode==='function')lookupScannedCode(code);else{closeScanner();consultCatalog(code);}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){stopScanner();if($('scanner-dialog').open){$('scanner-resume').hidden=false;$('scanner-status').textContent='Cámara detenida. Pulsa Volver a la cámara para continuar.';}}});
@@ -55,9 +61,11 @@ if('serviceWorker' in navigator&&window.isSecureContext)navigator.serviceWorker.
 
 
 async function focusScannerCamera(event){
- if(!scannerStream)return;
+ if(!scannerStream){if($('scanner-dialog').dataset.mode!=='result')return startScanner({resetCode:false});return;}
  const rect=$('scanner-video').getBoundingClientRect(),x=event?.clientX==null ? .5 : (event.clientX-rect.left)/rect.width,y=event?.clientY==null ? .5 : (event.clientY-rect.top)/rect.height;
  const generation=scannerGeneration;
- try{const result=await CameraFocus.focus(scannerStream.getVideoTracks?.()[0]||scannerStream.getTracks()[0],x,y);if(generation!==scannerGeneration)return;$('scanner-status').textContent=result==='unsupported'?'Este navegador no permite solicitar el enfoque. Mantén el código centrado y aleja un poco el envase.':result==='point'?'Enfoque solicitado en el punto que has tocado.':'Enfoque de la cámara solicitado. Mantén el código centrado.';}catch{if(generation===scannerGeneration)$('scanner-status').textContent='No se pudo ajustar el enfoque. Prueba a alejar un poco el envase.';}
+ try{const result=await CameraFocus.focus(scannerStream.getVideoTracks?.()[0]||scannerStream.getTracks()[0],x,y);if(generation!==scannerGeneration)return;if(result!=='unsupported')$('scanner-status').textContent=result==='point'?'Enfoque solicitado en el punto que has tocado.':'Enfoque de la cámara solicitado. Mantén el código centrado.';}catch{if(generation===scannerGeneration)$('scanner-status').textContent='No se pudo ajustar el enfoque. Prueba a alejar un poco el envase.';}
 }
-$('scanner-video').addEventListener('click',focusScannerCamera);
+const scannerCamera=$('scanner-camera')||$('scanner-video');
+scannerCamera.addEventListener('click',focusScannerCamera);
+scannerCamera.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();focusScannerCamera();}});
