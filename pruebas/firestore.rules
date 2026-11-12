@@ -1,3 +1,5 @@
+// HISTÓRICO: solo listas privadas. NO DESPLEGAR como reglas completas.
+// Las reglas activas de grupos deben exportarse y auditarse desde Firebase.
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -22,3 +24,4 @@ service cloud.firestore {
     }
   }
 }
+

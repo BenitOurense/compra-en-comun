@@ -1,0 +1,21 @@
+name: Comprobaciones de Market Sinc
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Buscar patrones de credenciales privadas
+        run: node pruebas/tools/security-check.cjs
+      - name: Probar aislamiento, permisos y límites de solicitudes
+        run: node --test pruebas/tests/*.test.cjs
+      - name: Probar el generador de catálogo
+        run: python3 -m unittest discover -s pruebas/tools -p 'test_*.py'
