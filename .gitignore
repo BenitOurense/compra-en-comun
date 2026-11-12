@@ -1,0 +1,5 @@
+pruebas/tests/firestore/node_modules/
+pruebas/tests/firestore/package-lock.json
+*-debug.log
+*-debug.*.log
+.openai/

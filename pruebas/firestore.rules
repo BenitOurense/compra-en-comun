@@ -1,27 +1,150 @@
-// HISTÓRICO: solo listas privadas. NO DESPLEGAR como reglas completas.
-// Las reglas activas de grupos deben exportarse y auditarse desde Firebase.
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /users/{userId}/lists/{listId} {
-      function isOwner() {
-        return request.auth != null
-          && request.auth.uid == userId
-          && request.auth.token.email_verified == true;
+    function verified() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+    function groupPath(id) {
+      return /databases/$(database)/documents/sharedLists/$(id);
+    }
+    function memberPath(id, uid) {
+      return /databases/$(database)/documents/sharedLists/$(id)/members/$(uid);
+    }
+    function revocationPath(id, uid) {
+      return /databases/$(database)/documents/sharedLists/$(id)/revocations/$(uid);
+    }
+    function isOwner(id) {
+      return verified() && exists(groupPath(id))
+        && get(groupPath(id)).data.ownerUid == request.auth.uid;
+    }
+    function boundMember(id, uid) {
+      return exists(groupPath(id)) && exists(memberPath(id, uid))
+        && (!get(groupPath(id)).data.keys().hasAny(['createdAt'])
+          || get(memberPath(id, uid)).data.joinedAt >= get(groupPath(id)).data.createdAt);
+    }
+    function isMember(id) {
+      return verified() && boundMember(id, request.auth.uid);
+    }
+    function isAdmin(id) {
+      return isOwner(id) || (isMember(id)
+        && get(memberPath(id, request.auth.uid)).data.get('role', 'member') == 'admin');
+    }
+    function canInvite(id) {
+      return isAdmin(id) || (isMember(id)
+        && get(groupPath(id)).data.get('invitePolicy', 'owner') == 'members');
+    }
+    function validList(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() <= 70
+        && data.items is list && data.items.size() <= 500 && data.updatedAt is timestamp;
+    }
+    function validAlias(data) {
+      return data.alias is string && data.alias.size() > 0 && data.alias.size() <= 40;
+    }
+    function validInvitation(id, uid, token) {
+      let path = /databases/$(database)/documents/invitations/$(token);
+      let invitation = get(path).data;
+      let group = get(groupPath(id)).data;
+      return exists(path) && invitation.listId == id
+        && invitation.ownerUid == group.ownerUid && invitation.expiresAt > request.time
+        && !invitation.keys().hasAny(['usedBy'])
+        && getAfter(path).data.usedBy == uid
+        && getAfter(path).data.usedAt == request.time
+        && (!group.keys().hasAny(['createdAt'])
+          || (invitation.keys().hasAny(['issuedAt']) && invitation.issuedAt >= group.createdAt))
+        && (!exists(revocationPath(id, uid))
+          || (invitation.keys().hasAny(['issuedAt'])
+            && invitation.issuedAt > get(revocationPath(id, uid)).data.revokedAt));
+    }
+    match /users/{uid}/lists/{id} {
+      allow read, delete: if verified() && request.auth.uid == uid;
+      allow create, update: if verified() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['name', 'items', 'updatedAt'])
+        && validList(request.resource.data);
+    }
+    match /sharedLists/{id} {
+      // Exact absent-document reads let an owner start an atomic promotion.
+      // Collection enumeration remains denied.
+      allow get: if verified() && (!exists(groupPath(id)) || isOwner(id) || isMember(id));
+      allow list: if false;
+      allow create: if verified() && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.keys().hasOnly(['ownerUid', 'name', 'items', 'updatedAt', 'invitePolicy', 'createdAt'])
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.get('invitePolicy', 'owner') in ['owner', 'members']
+        && validList(request.resource.data);
+      allow update: if (isMember(id) || isOwner(id))
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'items', 'updatedAt', 'invitePolicy', 'ownerUid'])
+        && (request.resource.data.ownerUid == resource.data.ownerUid
+          || (isOwner(id) && boundMember(id, request.resource.data.ownerUid)))
+        && request.resource.data.get('invitePolicy', 'owner') in ['owner', 'members']
+        && (request.resource.data.get('invitePolicy', 'owner') == resource.data.get('invitePolicy', 'owner') || isOwner(id))
+        && validList(request.resource.data);
+      allow delete: if isOwner(id);
+      match /members/{uid} {
+        allow get: if isMember(id) || isOwner(id)
+          || (verified() && uid == request.auth.uid && !exists(groupPath(id)));
+        allow list: if isMember(id) || isOwner(id);
+        allow create: if verified() && request.auth.uid == uid
+          && exists(groupPath(id))
+          && request.resource.data.keys().hasOnly(['joinedAt', 'inviteId', 'alias'])
+          && validAlias(request.resource.data)
+          && request.resource.data.joinedAt == request.time
+          && request.resource.data.inviteId is string
+          && ((isOwner(id) && request.resource.data.inviteId == 'owner')
+            || validInvitation(id, uid, request.resource.data.inviteId));
+        allow delete: if verified() && (
+          (isOwner(id) && !existsAfter(groupPath(id)))
+          || (request.auth.uid == uid && !isOwner(id))
+          || (isAdmin(id) && uid != request.auth.uid
+            && uid != get(groupPath(id)).data.ownerUid
+            && getAfter(revocationPath(id, uid)).data.revokedAt == request.time)
+        );
+        allow update: if isMember(id)
+          && ((request.auth.uid == uid
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['alias']))
+            || (isOwner(id) && uid != request.auth.uid
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['role'])
+              && request.resource.data.role in ['admin', 'member']))
+          && validAlias(request.resource.data);
       }
-      function validList() {
-        return request.resource.data.keys().hasOnly(['name','items','updatedAt'])
-          && request.resource.data.keys().hasAll(['name','items','updatedAt'])
-          && request.resource.data.name is string
-          && request.resource.data.name.size() > 0
-          && request.resource.data.name.size() <= 70
-          && request.resource.data.items is list
-          && request.resource.data.items.size() <= 500
-          && request.resource.data.updatedAt is timestamp;
+      match /revocations/{uid} {
+        allow read: if isAdmin(id);
+        allow create, update: if isAdmin(id) && uid != request.auth.uid
+          && uid != get(groupPath(id)).data.ownerUid
+          && request.resource.data.keys().hasOnly(['revokedAt'])
+          && request.resource.data.revokedAt == request.time
+          && !existsAfter(memberPath(id, uid));
+        allow delete: if false;
       }
-      allow read, delete: if isOwner();
-      allow create, update: if isOwner() && validList();
+    }
+    match /invitations/{token} {
+      allow get: if verified();
+      allow list: if false;
+      allow create: if verified()
+        && token.matches('^[a-f0-9]{48}$')
+        && request.resource.data.keys().hasOnly(['listId', 'ownerUid', 'expiresAt', 'issuedAt'])
+        && request.resource.data.listId is string
+        && exists(groupPath(request.resource.data.listId))
+        && request.resource.data.ownerUid == get(groupPath(request.resource.data.listId)).data.ownerUid
+        && canInvite(request.resource.data.listId)
+        && request.resource.data.issuedAt == request.time
+        && request.resource.data.expiresAt is timestamp
+        && request.resource.data.expiresAt > request.time
+        && request.resource.data.expiresAt < request.time + duration.value(8, 'd');
+      allow delete: if verified() && (resource.data.ownerUid == request.auth.uid || isOwner(resource.data.listId));
+      allow update: if verified() && !resource.data.keys().hasAny(['usedBy'])
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['usedBy', 'usedAt'])
+        && request.resource.data.usedBy == request.auth.uid
+        && request.resource.data.usedAt == request.time
+        && getAfter(memberPath(resource.data.listId, request.auth.uid)).data.inviteId == token
+        && getAfter(memberPath(resource.data.listId, request.auth.uid)).data.joinedAt == request.time;
+    }
+    match /userShares/{uid}/lists/{id} {
+      allow read: if verified() && request.auth.uid == uid;
+      allow create: if verified() && request.auth.uid == uid && isMember(id)
+        && request.resource.data.keys().hasOnly(['joinedAt'])
+        && request.resource.data.joinedAt == request.time;
+      allow delete: if verified() && (request.auth.uid == uid || isAdmin(id));
+      allow update: if false;
     }
   }
 }
-

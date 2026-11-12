@@ -6,6 +6,20 @@
   const member=(id,uid)=>fs.doc(db,'sharedLists',id,'members',uid);
   const share=(id,uid)=>fs.doc(db,'userShares',uid,'lists',id);
   const account=uid=>{if(!uid)throw Error('Inicia sesión para continuar.');};
+  async function promote(uid,list,alias){
+   account(uid);
+   const current=await fs.getDoc(group(list.id));
+   if(current.exists()){
+    if(current.data().ownerUid!==uid)throw Error('Esta lista pertenece a otra cuenta.');
+   }else{
+    await fs.setDoc(group(list.id),{ownerUid:uid,name:list.name,items:list.items,createdAt:fs.serverTimestamp(),updatedAt:fs.serverTimestamp()});
+   }
+   const self=await fs.getDoc(member(list.id,uid));
+   if(!self.exists())await fs.setDoc(member(list.id,uid),{joinedAt:fs.serverTimestamp(),inviteId:'owner',alias:String(alias||'Propietario').trim().slice(0,40)||'Propietario'});
+   const shortcut=await fs.getDoc(share(list.id,uid));
+   if(!shortcut.exists())await fs.setDoc(share(list.id,uid),{joinedAt:fs.serverTimestamp()});
+   await fs.deleteDoc(fs.doc(db,'users',uid,'lists',list.id));
+  }
   async function remove(uid,id){
    account(uid);
    // Enumerate members before removing the parent: SDK deletes do not cascade.
@@ -53,6 +67,9 @@
     if(!current.exists())throw Error('Esta lista ya no existe.');
     if(current.data().ownerUid!==uid&&self.data()?.role!=='admin')throw Error('Solo los administradores pueden expulsar participantes.');
     if(current.data().ownerUid===targetUid)throw Error('No se puede expulsar al propietario.');
+    // A stale invitation must not restore a revoked membership. Rules require
+    // this tombstone and the deletion in the same atomic transaction.
+    tx.set(fs.doc(db,'sharedLists',id,'revocations',targetUid),{revokedAt:fs.serverTimestamp()});
     tx.delete(member(id,targetUid));
    });
   }
@@ -69,7 +86,13 @@
    let existing=null;
    try{existing=await fs.getDoc(member(id,uid));}catch(error){if(error.code!=='permission-denied')throw error;}
    if(!existing?.exists()){
-    try{await fs.setDoc(member(id,uid),{joinedAt:fs.serverTimestamp(),inviteId:token,alias:name});}
+    if(invitation.data().usedBy)throw Error('Esta invitación ya se ha utilizado. Pide una nueva.');
+    try{
+     const batch=fs.writeBatch(db);
+     batch.set(member(id,uid),{joinedAt:fs.serverTimestamp(),inviteId:token,alias:name});
+     batch.update(fs.doc(db,'invitations',token),{usedBy:uid,usedAt:fs.serverTimestamp()});
+     await batch.commit();
+    }
     catch(error){
      if(error.code!=='permission-denied')throw error;
      // Another tab may have completed the join in the meantime.
@@ -87,7 +110,7 @@
    if(!shortcut.exists())await fs.setDoc(share(id,uid),{joinedAt:fs.serverTimestamp()});
    return id;
   }
-  return {remove,leave,transfer,kick,accept};
+  return {remove,leave,transfer,kick,accept,promote};
  }
  root.SharedActions={create};
 })(globalThis);

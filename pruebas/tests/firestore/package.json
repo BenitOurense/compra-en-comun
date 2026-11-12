@@ -1,0 +1,10 @@
+{
+  "name": "market-sinc-firestore-tests",
+  "private": true,
+  "description": "Tests against a demo Firebase Emulator project only",
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "6.0.0",
+    "firebase": "13.3.0",
+    "firebase-tools": "15.36.0"
+  }
+}
